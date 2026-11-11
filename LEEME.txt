@@ -1,0 +1,16 @@
+MI ESTABLO - PRIMERA VERSION ANDROID
+
+Archivos:
+- index.html: aplicación
+- manifest.json: configuración instalable
+- sw.js: funcionamiento offline
+
+Para instalar:
+1. Publica el contenido de esta carpeta en un sitio HTTPS (por ejemplo, Vercel).
+2. Abre la dirección en Chrome de Android.
+3. Menú ⋮ > Instalar aplicación o Añadir a pantalla principal.
+4. Abre la aplicación una vez con internet; después podrá funcionar sin conexión.
+
+Los datos se guardan en el almacenamiento local del navegador de ese teléfono.
+IMPORTANTE: usa Historial > Descargar copia de seguridad para guardar periódicamente un JSON.
+No borres los datos del navegador ni desinstales sin exportar una copia.

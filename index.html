@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#174a36">
+<meta name="description" content="Registro offline de ganado lechero">
+<link rel="manifest" href="manifest.json">
+<title>Mi Establo</title>
+<style>
+:root{--green:#174a36;--green2:#246b4d;--bg:#f3f6f3;--card:#fff;--ink:#18251e;--muted:#65736a;--line:#dce5de;--red:#a33434}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:var(--green);color:#fff;padding:20px 16px 18px;position:sticky;top:0;z-index:5}
+header h1{margin:0;font-size:23px}header p{margin:4px 0 0;color:#d6e9dd;font-size:13px}
+main{max-width:760px;margin:auto;padding:14px 14px 90px}
+nav{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 14px}
+nav button,.quick button{border:1px solid var(--line);background:#fff;border-radius:13px;padding:12px 6px;font-weight:650;color:var(--green);font-size:13px}
+nav button.active{background:var(--green);color:#fff;border-color:var(--green)}
+.panel{display:none}.panel.active{display:block}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+.card,.formcard,.animal{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+.kicker{font-size:12px;color:var(--muted)}.big{font-size:27px;font-weight:750;margin-top:3px}
+h2{font-size:18px;margin:16px 0 10px}h3{font-size:16px;margin:0 0 10px}
+.quick{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.quick button{padding:17px 10px;font-size:14px}
+label{display:block;font-size:13px;font-weight:650;margin:11px 0 5px}
+input,select,textarea{width:100%;border:1px solid #cbd8ce;border-radius:10px;padding:12px;font:inherit;background:#fff;color:var(--ink)}
+textarea{min-height:70px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.primary,.secondary,.danger{border:0;border-radius:11px;padding:13px 15px;font:700 15px system-ui;cursor:pointer}
+.primary{background:var(--green);color:#fff;width:100%;margin-top:14px}
+.secondary{background:#e6efe9;color:var(--green);width:100%;margin-top:9px}
+.danger{background:#f9e9e9;color:var(--red);margin-top:8px}
+.muted{color:var(--muted);font-size:13px}.animal{margin:8px 0}.animal strong{font-size:16px}
+.entry{border-bottom:1px solid var(--line);padding:10px 0;font-size:14px}.entry:last-child{border:0}
+.pill{display:inline-block;background:#e7f1ea;color:var(--green);border-radius:30px;padding:3px 8px;font-size:11px;font-weight:700}
+.empty{padding:18px;text-align:center;color:var(--muted);background:#fff;border-radius:14px}
+footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:9px 14px calc(9px + env(safe-area-inset-bottom));text-align:center;color:var(--muted);font-size:11px}
+.smallbtn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 10px;color:var(--green);font-weight:650}
+@media(min-width:600px){.quick{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header><h1>🐄 Mi Establo</h1><p>Control diario de tu ganado · Funciona sin internet</p></header>
+<main>
+<nav>
+<button class="active" data-tab="inicio">Inicio</button>
+<button data-tab="leche">🥛 Leche</button>
+<button data-tab="repro">❤️ Reproducción</button>
+<button data-tab="sanidad">💉 Sanidad</button>
+<button data-tab="animales">🐄 Animales</button>
+<button data-tab="historial">📋 Historial</button>
+</nav>
+
+<section id="inicio" class="panel active">
+<div class="cards">
+<div class="card"><div class="kicker">Animales registrados</div><div class="big" id="nAnimales">2</div></div>
+<div class="card"><div class="kicker">Leche registrada hoy</div><div class="big"><span id="litrosHoy">0.00</span> L</div></div>
+</div>
+<h2>Registro rápido</h2>
+<div class="quick">
+<button onclick="showTab('leche')">🥛 Registrar leche</button>
+<button onclick="showTab('repro')">❤️ Registrar celo / servicio</button>
+<button onclick="showTab('sanidad')">💉 Registrar medicación</button>
+<button onclick="showTab('animales')">🐄 Ver mis animales</button>
+<button onclick="showTab('historial')">📋 Ver historial</button>
+<button onclick="backup()">⬇️ Copia de seguridad</button>
+</div>
+<h2>Últimos movimientos</h2><div id="ultimos"></div>
+<p class="muted">Tus datos se guardan en este teléfono. Exporta una copia de seguridad regularmente.</p>
+</section>
+
+<section id="leche" class="panel">
+<div class="formcard"><h3>🥛 Producción diaria</h3>
+<label>Fecha</label><input id="mFecha" type="date">
+<label>Animal</label><select id="mAnimal"></select>
+<div class="row"><div><label>Mañana (litros)</label><input id="mManana" type="number" min="0" step="0.1" placeholder="0"></div><div><label>Tarde (litros)</label><input id="mTarde" type="number" min="0" step="0.1" placeholder="0"></div></div>
+<label>Observaciones</label><textarea id="mObs" placeholder="Ej. leche retenida, cambio de alimentación..."></textarea>
+<button class="primary" onclick="saveMilk()">Guardar producción</button></div>
+<h2>Registros recientes</h2><div id="milkList"></div>
+</section>
+
+<section id="repro" class="panel">
+<div class="formcard"><h3>❤️ Evento reproductivo</h3>
+<label>Fecha</label><input id="rFecha" type="date">
+<label>Animal</label><select id="rAnimal"></select>
+<label>Evento</label><select id="rEvento"><option>Celo observado</option><option>Servicio natural</option><option>Inseminación artificial</option><option>Diagnóstico de gestación</option><option>Aborto</option><option>Parto</option><option>Secado</option><option>Otro</option></select>
+<label>Hora (opcional)</label><input id="rHora" type="time">
+<label>Toro / pajilla / técnico</label><input id="rDetalle" placeholder="Identificación del toro o pajilla">
+<label>Resultado y observaciones</label><textarea id="rObs"></textarea>
+<button class="primary" onclick="saveRepro()">Guardar evento</button></div>
+<h2>Historial reproductivo</h2><div id="reproList"></div>
+</section>
+
+<section id="sanidad" class="panel">
+<div class="formcard"><h3>💉 Medicación y sanidad</h3>
+<label>Fecha</label><input id="sFecha" type="date">
+<label>Animal</label><select id="sAnimal"></select>
+<label>Motivo / enfermedad</label><input id="sMotivo" placeholder="Ej. mastitis, desparasitación, vacuna">
+<label>Medicamento / vacuna</label><input id="sMed" placeholder="Nombre del producto">
+<div class="row"><div><label>Dosis</label><input id="sDosis" placeholder="Ej. 5 ml"></div><div><label>Vía</label><select id="sVia"><option>Intramuscular</option><option>Subcutánea</option><option>Intramamaria</option><option>Oral</option><option>Tópica</option><option>Intravenosa</option><option>Otra</option></select></div></div>
+<div class="row"><div><label>Retiro de leche (días)</label><input id="sRetiro" type="number" min="0" placeholder="Según etiqueta"></div><div><label>Responsable</label><input id="sResp" placeholder="Nombre"></div></div>
+<label>Observaciones</label><textarea id="sObs" placeholder="Frecuencia, duración, indicación veterinaria..."></textarea>
+<button class="primary" onclick="saveHealth()">Guardar tratamiento</button></div>
+<h2>Historial sanitario</h2><div id="healthList"></div>
+<p class="muted">Respeta siempre el periodo de retiro indicado en la etiqueta y por el veterinario. No comercialices leche durante el retiro.</p>
+</section>
+
+<section id="animales" class="panel">
+<div class="formcard"><h3>🐄 Agregar / editar animal</h3>
+<label>Código (obligatorio)</label><input id="aCodigo" placeholder="Ej. V003">
+<label>Nombre</label><input id="aNombre" placeholder="Ej. Lucera">
+<div class="row"><div><label>Raza</label><input id="aRaza" placeholder="Ej. Brown Swiss"></div><div><label>Fecha de nacimiento</label><input id="aNac" type="date"></div></div>
+<label>Estado</label><select id="aEstado"><option>En producción</option><option>Seca</option><option>Preñada</option><option>Ternera</option><option>Vendido</option><option>Fallecido</option></select>
+<button class="primary" onclick="saveAnimal()">Guardar animal</button>
+<p class="muted">Para modificar, pulsa “Editar” en la ficha del animal.</p></div>
+<h2>Mi ganado</h2><div id="animalList"></div>
+</section>
+
+<section id="historial" class="panel">
+<div class="formcard"><h3>📋 Respaldo de información</h3>
+<p class="muted">Descarga todos tus datos en un archivo JSON para guardarlos o trasladarlos a otro teléfono.</p>
+<button class="primary" onclick="backup()">Descargar copia de seguridad</button>
+<label>Restaurar copia (archivo JSON)</label><input id="restoreFile" type="file" accept=".json,application/json">
+<button class="secondary" onclick="restore()">Restaurar datos desde archivo</button>
+<button class="secondary" onclick="exportCSV()">Exportar registros a CSV</button>
+</div>
+<h2>Todos los registros</h2><div id="allList"></div>
+</section>
+</main>
+<footer>Mi Establo · Datos guardados localmente en este dispositivo</footer>
+<script>
+const $=id=>document.getElementById(id);
+const today=()=>new Date().toISOString().slice(0,10);
+let db=JSON.parse(localStorage.getItem('miEstabloDB')||'null')||{
+ animals:[{code:'V001',name:'Vaca 001',breed:'',birth:'',status:'En producción'},{code:'V002',name:'Vaca 002',breed:'',birth:'',status:'En producción'}],
+ milk:[],repro:[],health:[]
+};
+function persist(){localStorage.setItem('miEstabloDB',JSON.stringify(db));render()}
+function dateInit(){['mFecha','rFecha','sFecha'].forEach(x=>$(x).value=today())}
+function showTab(id){document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+function animalOptions(id){let el=$(id),old=el.value;el.innerHTML=db.animals.filter(a=>!['Vendido','Fallecido'].includes(a.status)).map(a=>`<option value="${esc(a.code)}">${esc(a.code)} · ${esc(a.name)}</option>`).join('');if(old)el.value=old}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function saveMilk(){let o={date:$('mFecha').value,animal:$('mAnimal').value,am:+$('mManana').value||0,pm:+$('mTarde').value||0,obs:$('mObs').value};if(!o.date||!o.animal||(!o.am&&!o.pm)){alert('Indica fecha, animal y al menos una cantidad de leche.');return}db.milk.unshift(o);$('mManana').value='';$('mTarde').value='';$('mObs').value='';persist();alert('Producción guardada.')}
+function saveRepro(){let o={date:$('rFecha').value,animal:$('rAnimal').value,event:$('rEvento').value,time:$('rHora').value,detail:$('rDetalle').value,obs:$('rObs').value};if(!o.date||!o.animal){alert('Indica fecha y animal.');return}db.repro.unshift(o);$('rDetalle').value='';$('rObs').value='';persist();alert('Evento reproductivo guardado.')}
+function saveHealth(){let o={date:$('sFecha').value,animal:$('sAnimal').value,reason:$('sMotivo').value,medicine:$('sMed').value,dose:$('sDosis').value,route:$('sVia').value,withdrawal:$('sRetiro').value,person:$('sResp').value,obs:$('sObs').value};if(!o.date||!o.animal||!o.medicine){alert('Indica fecha, animal y medicamento o vacuna.');return}db.health.unshift(o);['sMotivo','sMed','sDosis','sRetiro','sResp','sObs'].forEach(x=>$(x).value='');persist();alert('Registro sanitario guardado.')}
+function saveAnimal(){let a={code:$('aCodigo').value.trim().toUpperCase(),name:$('aNombre').value.trim()||$('aCodigo').value.trim(),breed:$('aRaza').value,birth:$('aNac').value,status:$('aEstado').value};if(!a.code){alert('El código es obligatorio.');return}let i=db.animals.findIndex(x=>x.code===a.code);if(i>=0)db.animals[i]=a;else db.animals.push(a);['aCodigo','aNombre','aRaza','aNac'].forEach(x=>$(x).value='');persist();alert('Animal guardado.')}
+function editAnimal(code){let a=db.animals.find(x=>x.code===code);if(!a)return;$('aCodigo').value=a.code;$('aNombre').value=a.name;$('aRaza').value=a.breed;$('aNac').value=a.birth;$('aEstado').value=a.status;showTab('animales');window.scrollTo(0,0)}
+function animalName(code){let a=db.animals.find(x=>x.code===code);return a?`${a.code} · ${a.name}`:code}
+function block(title,sub){return `<div class="entry"><strong>${esc(title)}</strong><br><span class="muted">${esc(sub)}</span></div>`}
+function render(){
+['mAnimal','rAnimal','sAnimal'].forEach(animalOptions);
+$('nAnimales').textContent=db.animals.filter(a=>!['Vendido','Fallecido'].includes(a.status)).length;
+let sum=db.milk.filter(x=>x.date===today()).reduce((n,x)=>n+x.am+x.pm,0);$('litrosHoy').textContent=sum.toFixed(2);
+$('animalList').innerHTML=db.animals.map(a=>`<div class="animal"><strong>${esc(a.code)} · ${esc(a.name)}</strong><br><span class="muted">${esc(a.breed||'Raza no indicada')} · ${esc(a.status)}</span><br><button class="smallbtn" onclick="editAnimal('${esc(a.code)}')">Editar</button></div>`).join('')||'<div class="empty">Aún no hay animales.</div>';
+$('milkList').innerHTML=db.milk.slice(0,12).map(x=>block(`${x.date} · ${animalName(x.animal)}`,`Mañana ${x.am} L + tarde ${x.pm} L = ${(x.am+x.pm).toFixed(2)} L. ${x.obs||''}`)).join('')||'<div class="empty">Todavía no hay producción registrada.</div>';
+$('reproList').innerHTML=db.repro.slice(0,15).map(x=>block(`${x.date} · ${animalName(x.animal)}`,`${x.event}${x.time?' · '+x.time:''}. ${x.detail||''} ${x.obs||''}`)).join('')||'<div class="empty">Todavía no hay eventos reproductivos.</div>';
+$('healthList').innerHTML=db.health.slice(0,15).map(x=>block(`${x.date} · ${animalName(x.animal)}`,`${x.medicine} · ${x.dose||'Dosis no indicada'} · ${x.route}. Motivo: ${x.reason||'No indicado'}. Retiro leche: ${x.withdrawal||'No indicado'} días.`)).join('')||'<div class="empty">Todavía no hay tratamientos registrados.</div>';
+let all=[...db.milk.map(x=>({d:x.date,t:'Leche',a:x.animal,s:`${(x.am+x.pm).toFixed(2)} litros`})),...db.repro.map(x=>({d:x.date,t:'Reproducción',a:x.animal,s:x.event})),...db.health.map(x=>({d:x.date,t:'Sanidad',a:x.animal,s:x.medicine}))].sort((a,b)=>b.d.localeCompare(a.d));
+$('allList').innerHTML=all.slice(0,40).map(x=>block(`${x.d} · ${x.t} · ${animalName(x.a)}`,x.s)).join('')||'<div class="empty">No hay registros todavía.</div>';
+$('ultimos').innerHTML=all.slice(0,4).map(x=>block(`${x.d} · ${x.t} · ${animalName(x.a)}`,x.s)).join('')||'<div class="empty">Registra tu primera producción.</div>';
+}
+function backup(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});download(blob,'mi_establo_respaldo_'+today()+'.json')}
+function exportCSV(){let rows=[['Tipo','Fecha','Código','Detalle 1','Detalle 2','Observaciones']];db.milk.forEach(x=>rows.push(['Leche',x.date,x.animal,'Mañana '+x.am+' L','Tarde '+x.pm+' L',x.obs]));db.repro.forEach(x=>rows.push(['Reproducción',x.date,x.animal,x.event,x.detail,x.obs]));db.health.forEach(x=>rows.push(['Sanidad',x.date,x.animal,x.medicine,x.dose+' '+x.route,'Retiro leche: '+x.withdrawal+' días. '+x.obs]));let csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');download(new Blob([csv],{type:'text/csv;charset=utf-8'}),'mi_establo_registros_'+today()+'.csv')}
+function download(blob,name){let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}
+function restore(){let f=$('restoreFile').files[0];if(!f){alert('Selecciona primero tu archivo JSON.');return}let rd=new FileReader();rd.onload=()=>{try{let x=JSON.parse(rd.result);if(!x.animals||!x.milk||!x.repro||!x.health)throw 0;if(!confirm('Esto reemplazará los datos actuales de la aplicación. ¿Continuar?'))return;db=x;persist();alert('Copia restaurada.')}catch(e){alert('El archivo no parece ser una copia válida de Mi Establo.')}};rd.readAsText(f)}
+dateInit();render();
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body></html>
