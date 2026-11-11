@@ -1,49 +1,80 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#174a36">
-<meta name="description" content="Registro offline de ganado lechero">
-<link rel="manifest" href="manifest.json">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#102A43">
+<meta name="description" content="Control de ganado lechero">
 <title>Mi Establo</title>
+<link rel="manifest" href="manifest.json">
 <style>
-:root{--green:#174a36;--green2:#246b4d;--bg:#f3f6f3;--card:#fff;--ink:#18251e;--muted:#65736a;--line:#dce5de;--red:#a33434}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-header{background:var(--green);color:#fff;padding:20px 16px 18px;position:sticky;top:0;z-index:5}
-header h1{margin:0;font-size:23px}header p{margin:4px 0 0;color:#d6e9dd;font-size:13px}
-main{max-width:760px;margin:auto;padding:14px 14px 90px}
-nav{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 14px}
-nav button,.quick button{border:1px solid var(--line);background:#fff;border-radius:13px;padding:12px 6px;font-weight:650;color:var(--green);font-size:13px}
-nav button.active{background:var(--green);color:#fff;border-color:var(--green)}
+:root{
+ --green:#102A43;--green2:#163F5C;--bg:#F1F5F9;
+ --card:#FFFFFF;--ink:#243B53;--muted:#627D98;
+ --line:#CBD5E1;--red:#B91C1C;--blue:#1769AA;
+ --blue-light:#DCEEFF;--orange:#B45309;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:var(--green);color:white;padding:18px 16px;position:sticky;top:0;z-index:10}
+header h1{margin:0;font-size:23px}
+header p{margin:4px 0 0;color:#DCE8F2;font-size:13px}
+main{max-width:850px;margin:auto;padding:14px 14px 90px}
+nav{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+nav button,.quick button{border:1px solid var(--line);background:white;border-radius:12px;padding:12px 5px;font-weight:650;color:var(--green);font-size:13px}
+nav button.active{background:var(--green);color:white;border-color:var(--green)}
 .panel{display:none}.panel.active{display:block}
 .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
-.card,.formcard,.animal{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
-.kicker{font-size:12px;color:var(--muted)}.big{font-size:27px;font-weight:750;margin-top:3px}
-h2{font-size:18px;margin:16px 0 10px}h3{font-size:16px;margin:0 0 10px}
-.quick{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.quick button{padding:17px 10px;font-size:14px}
+.card,.formcard,.animal,.report{background:white;border:1px solid var(--line);border-radius:15px;padding:14px;margin-bottom:10px}
+.kicker{font-size:12px;color:var(--muted)}
+.big{font-size:27px;font-weight:750;margin-top:3px}
+h2{font-size:18px;margin:18px 0 10px}
+h3{font-size:16px;margin:0 0 10px}
+.quick{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.quick button{padding:16px 8px;font-size:14px}
 label{display:block;font-size:13px;font-weight:650;margin:11px 0 5px}
-input,select,textarea{width:100%;border:1px solid #cbd8ce;border-radius:10px;padding:12px;font:inherit;background:#fff;color:var(--ink)}
+input,select,textarea{width:100%;border:1px solid #CBD5E1;border-radius:10px;padding:11px;font:inherit;background:white;color:var(--ink)}
 textarea{min-height:70px;resize:vertical}
+input:disabled,select:disabled,textarea:disabled{background:#E9EEF3;color:#8494A7}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.primary,.secondary,.danger{border:0;border-radius:11px;padding:13px 15px;font:700 15px system-ui;cursor:pointer}
-.primary{background:var(--green);color:#fff;width:100%;margin-top:14px}
-.secondary{background:#e6efe9;color:var(--green);width:100%;margin-top:9px}
-.danger{background:#f9e9e9;color:var(--red);margin-top:8px}
-.muted{color:var(--muted);font-size:13px}.animal{margin:8px 0}.animal strong{font-size:16px}
-.entry{border-bottom:1px solid var(--line);padding:10px 0;font-size:14px}.entry:last-child{border:0}
-.pill{display:inline-block;background:#e7f1ea;color:var(--green);border-radius:30px;padding:3px 8px;font-size:11px;font-weight:700}
-.empty{padding:18px;text-align:center;color:var(--muted);background:#fff;border-radius:14px}
-footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:9px 14px calc(9px + env(safe-area-inset-bottom));text-align:center;color:var(--muted);font-size:11px}
-.smallbtn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 10px;color:var(--green);font-weight:650}
-@media(min-width:600px){.quick{grid-template-columns:repeat(3,1fr)}}
+.primary,.secondary,.danger,.smallbtn{border:0;border-radius:10px;padding:12px 14px;font:700 14px system-ui;cursor:pointer}
+.primary{background:var(--green);color:white;width:100%;margin-top:13px}
+.secondary{background:var(--blue-light);color:var(--blue);width:100%;margin-top:9px}
+.danger{background:#FEE2E2;color:var(--red);margin-top:8px}
+.smallbtn{padding:7px 10px;background:var(--blue-light);color:var(--blue);margin:5px 4px 0 0}
+.muted{color:var(--muted);font-size:13px}
+.entry{border-bottom:1px solid var(--line);padding:11px 0;font-size:14px}
+.entry:last-child{border:0}
+.pill{display:inline-block;background:var(--blue-light);color:var(--blue);border-radius:30px;padding:4px 9px;font-size:11px;font-weight:700}
+.status{padding:10px;border-radius:10px;background:#EAF2F8;color:var(--green);font-size:13px;margin-top:10px}
+.status.ok{background:#DCFCE7;color:#166534}
+.status.warn{background:#FEF3C7;color:#92400E}
+.empty{padding:18px;text-align:center;color:var(--muted);background:white;border-radius:12px}
+footer{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--line);padding:9px 14px;text-align:center;color:var(--muted);font-size:11px}
+.shift-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:8px}
+.shift-btn{border:1px solid var(--line);background:white;color:var(--green);border-radius:10px;padding:12px;font-weight:700}
+.shift-btn.selected{background:var(--green);color:white}
+.shift-btn:disabled{background:#E2E8F0;color:#94A3B8;cursor:not-allowed}
+.animal-row{display:grid;grid-template-columns:1.2fr 1fr auto;gap:7px;align-items:end;margin:8px 0}
+.animal-row button{padding:10px}
+.medicine-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.medicine-option{border:1px solid var(--line);padding:9px;border-radius:9px;background:#F8FAFC;font-size:13px}
+.medicine-option input{width:auto;margin-right:5px}
+.actions{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+@media(min-width:650px){nav{grid-template-columns:repeat(6,1fr)}.quick{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:430px){.animal-row{grid-template-columns:1fr 1fr}.animal-row button{grid-column:span 2}.medicine-list{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header><h1>🐄 Mi Establo</h1><p>Control diario de tu ganado · Funciona sin internet</p></header>
+<header>
+<h1>🐄 Mi Establo</h1>
+<p>Control diario de ganado lechero</p>
+</header>
+
 <main>
 <nav>
-<button class="active" data-tab="inicio">Inicio</button>
+<button data-tab="inicio">Inicio</button>
 <button data-tab="leche">🥛 Leche</button>
 <button data-tab="repro">❤️ Reproducción</button>
 <button data-tab="sanidad">💉 Sanidad</button>
@@ -51,76 +82,152 @@ footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px sol
 <button data-tab="historial">📋 Historial</button>
 </nav>
 
-<section id="inicio" class="panel active">
+<section id="inicio" class="panel">
 <div class="cards">
-<div class="card"><div class="kicker">Animales registrados</div><div class="big" id="nAnimales">2</div></div>
-<div class="card"><div class="kicker">Leche registrada hoy</div><div class="big"><span id="litrosHoy">0.00</span> L</div></div>
+ <div class="card"><div class="kicker">Animales activos</div><div class="big" id="nAnimales">0</div></div>
+ <div class="card"><div class="kicker">Leche registrada hoy</div><div class="big"><span id="litrosHoy">0.00</span> L</div></div>
 </div>
-<h2>Registro rápido</h2>
+<h2>Accesos rápidos</h2>
 <div class="quick">
-<button onclick="showTab('leche')">🥛 Registrar leche</button>
-<button onclick="showTab('repro')">❤️ Registrar celo / servicio</button>
-<button onclick="showTab('sanidad')">💉 Registrar medicación</button>
-<button onclick="showTab('animales')">🐄 Ver mis animales</button>
-<button onclick="showTab('historial')">📋 Ver historial</button>
+<button onclick="showTab('leche')">🥛 Registrar producción</button>
+<button onclick="showTab('repro')">❤️ Reproducción</button>
+<button onclick="showTab('sanidad')">💉 Sanidad</button>
+<button onclick="showTab('animales')">🐄 Mis animales</button>
+<button onclick="showTab('historial')">📋 Historial y reportes</button>
 <button onclick="backup()">⬇️ Copia de seguridad</button>
 </div>
-<h2>Últimos movimientos</h2><div id="ultimos"></div>
-<p class="muted">Tus datos se guardan en este teléfono. Exporta una copia de seguridad regularmente.</p>
+<h2>Últimos movimientos</h2>
+<div id="ultimos"></div>
 </section>
 
 <section id="leche" class="panel">
-<div class="formcard"><h3>🥛 Producción diaria</h3>
-<label>Fecha</label><input id="mFecha" type="date">
-<label>Animal</label><select id="mAnimal"></select>
-<div class="row"><div><label>Mañana (litros)</label><input id="mManana" type="number" min="0" step="0.1" placeholder="0"></div><div><label>Tarde (litros)</label><input id="mTarde" type="number" min="0" step="0.1" placeholder="0"></div></div>
-<label>Observaciones</label><textarea id="mObs" placeholder="Ej. leche retenida, cambio de alimentación..."></textarea>
-<button class="primary" onclick="saveMilk()">Guardar producción</button></div>
-<h2>Registros recientes</h2><div id="milkList"></div>
+<div class="formcard">
+<h3>🥛 Registro de producción</h3>
+<label>Fecha del ordeño</label>
+<input id="mFecha" type="date" onchange="dateMilkChanged()">
+
+<label>Turno de ordeño</label>
+<div class="shift-grid">
+<button type="button" id="btnManana" class="shift-btn selected" onclick="chooseShift('am')">🌅 Mañana</button>
+<button type="button" id="btnTarde" class="shift-btn" onclick="chooseShift('pm')">🌇 Tarde</button>
+</div>
+<div id="shiftStatus" class="status">Selecciona la fecha y el turno.</div>
+
+<label>Modalidad de registro</label>
+<select id="mTipo" onchange="changeMilkType()">
+<option value="animal">Por animal</option>
+<option value="total">Producción total del establo</option>
+</select>
+
+<div id="animalMode">
+<p class="muted">Agrega una o varias vacas al mismo reporte. Cada vaca debe aparecer una sola vez en este turno.</p>
+<div id="animalRows"></div>
+<button type="button" class="secondary" onclick="addAnimalRow()">＋ Agregar otra vaca</button>
+</div>
+
+<div id="totalMode" style="display:none">
+<label>Producción total del establo (litros)</label>
+<input id="mTotal" type="number" min="0" step="0.01" placeholder="Ej. 18.50">
+</div>
+
+<label>Observaciones</label>
+<textarea id="mObs" placeholder="Observaciones del ordeño..."></textarea>
+<button class="primary" id="btnSaveMilk" onclick="saveMilk()">Guardar reporte</button>
+<button class="secondary" id="btnCancelEdit" style="display:none" onclick="cancelMilkEdit()">Cancelar edición</button>
+<p class="muted">Solo puede existir un reporte de mañana y uno de tarde por fecha. Si el turno ya fue registrado, podrás editarlo, pero no crear otro.</p>
+</div>
+
+<h2>Reportes de producción</h2>
+<div id="milkList"></div>
+
+<h2>📊 Reportes semanales</h2>
+<div class="formcard">
+<label>Seleccionar una fecha de la semana</label>
+<input id="weekDate" type="date" onchange="previewWeek()">
+<label>Precio de venta por litro (S/)</label>
+<input id="weekPrice" type="number" min="0" step="0.01" value="1.80" oninput="previewWeek()">
+<div id="weekPreview" class="status">Selecciona una fecha para calcular la semana.</div>
+<button class="primary" onclick="saveWeeklyReport()">Guardar reporte semanal</button>
+</div>
+<h2>Reportes semanales guardados</h2>
+<div id="weeklyList"></div>
 </section>
 
 <section id="repro" class="panel">
-<div class="formcard"><h3>❤️ Evento reproductivo</h3>
+<div class="formcard">
+<h3>❤️ Evento reproductivo</h3>
 <label>Fecha</label><input id="rFecha" type="date">
 <label>Animal</label><select id="rAnimal"></select>
-<label>Evento</label><select id="rEvento"><option>Celo observado</option><option>Servicio natural</option><option>Inseminación artificial</option><option>Diagnóstico de gestación</option><option>Aborto</option><option>Parto</option><option>Secado</option><option>Otro</option></select>
+<label>Evento</label>
+<select id="rEvento">
+<option>Celo observado</option><option>Servicio natural</option>
+<option>Inseminación artificial</option><option>Diagnóstico de gestación</option>
+<option>Aborto</option><option>Parto</option><option>Secado</option><option>Otro</option>
+</select>
 <label>Hora (opcional)</label><input id="rHora" type="time">
 <label>Toro / pajilla / técnico</label><input id="rDetalle" placeholder="Identificación del toro o pajilla">
 <label>Resultado y observaciones</label><textarea id="rObs"></textarea>
-<button class="primary" onclick="saveRepro()">Guardar evento</button></div>
+<button class="primary" onclick="saveRepro()">Guardar evento</button>
+</div>
 <h2>Historial reproductivo</h2><div id="reproList"></div>
 </section>
 
 <section id="sanidad" class="panel">
-<div class="formcard"><h3>💉 Medicación y sanidad</h3>
+<div class="formcard">
+<h3>💉 Medicación y sanidad</h3>
 <label>Fecha</label><input id="sFecha" type="date">
 <label>Animal</label><select id="sAnimal"></select>
 <label>Motivo / enfermedad</label><input id="sMotivo" placeholder="Ej. mastitis, desparasitación, vacuna">
-<label>Medicamento / vacuna</label><input id="sMed" placeholder="Nombre del producto">
-<div class="row"><div><label>Dosis</label><input id="sDosis" placeholder="Ej. 5 ml"></div><div><label>Vía</label><select id="sVia"><option>Intramuscular</option><option>Subcutánea</option><option>Intramamaria</option><option>Oral</option><option>Tópica</option><option>Intravenosa</option><option>Otra</option></select></div></div>
-<div class="row"><div><label>Retiro de leche (días)</label><input id="sRetiro" type="number" min="0" placeholder="Según etiqueta"></div><div><label>Responsable</label><input id="sResp" placeholder="Nombre"></div></div>
+
+<label>Medicamentos aplicados</label>
+<p class="muted">Selecciona uno o varios medicamentos. Puedes agregarlos al catálogo para utilizarlos en próximos tratamientos.</p>
+<div id="medicineOptions" class="medicine-list"></div>
+<div class="row">
+<div><label>Nuevo medicamento</label><input id="newMedicine" placeholder="Nombre"></div>
+<div style="display:flex;align-items:end"><button class="secondary" onclick="addMedicine()">＋ Agregar</button></div>
+</div>
+
+<div class="row">
+<div><label>Dosis</label><input id="sDosis" placeholder="Ej. 5 ml"></div>
+<div><label>Vía</label>
+<select id="sVia"><option>Intramuscular</option><option>Subcutánea</option><option>Intramamaria</option><option>Oral</option><option>Tópica</option><option>Intravenosa</option><option>Otra</option></select>
+</div>
+</div>
+<div class="row">
+<div><label>Retiro de leche (días)</label><input id="sRetiro" type="number" min="0" placeholder="Según etiqueta"></div>
+<div><label>Responsable</label><input id="sResp" placeholder="Nombre"></div>
+</div>
 <label>Observaciones</label><textarea id="sObs" placeholder="Frecuencia, duración, indicación veterinaria..."></textarea>
-<button class="primary" onclick="saveHealth()">Guardar tratamiento</button></div>
+<button class="primary" onclick="saveHealth()">Guardar tratamiento</button>
+</div>
 <h2>Historial sanitario</h2><div id="healthList"></div>
-<p class="muted">Respeta siempre el periodo de retiro indicado en la etiqueta y por el veterinario. No comercialices leche durante el retiro.</p>
+<p class="muted">Respeta siempre el periodo de retiro indicado en la etiqueta y por el veterinario. No comercialices leche durante el periodo de retiro.</p>
 </section>
 
 <section id="animales" class="panel">
-<div class="formcard"><h3>🐄 Agregar / editar animal</h3>
+<div class="formcard">
+<h3>🐄 Agregar / editar animal</h3>
 <label>Código (obligatorio)</label><input id="aCodigo" placeholder="Ej. V003">
 <label>Nombre</label><input id="aNombre" placeholder="Ej. Lucera">
-<div class="row"><div><label>Raza</label><input id="aRaza" placeholder="Ej. Brown Swiss"></div><div><label>Fecha de nacimiento</label><input id="aNac" type="date"></div></div>
-<label>Estado</label><select id="aEstado"><option>En producción</option><option>Seca</option><option>Preñada</option><option>Ternera</option><option>Vendido</option><option>Fallecido</option></select>
+<div class="row">
+<div><label>Raza</label><input id="aRaza" placeholder="Ej. Brown Swiss"></div>
+<div><label>Fecha de nacimiento</label><input id="aNac" type="date"></div>
+</div>
+<label>Estado</label>
+<select id="aEstado"><option>En producción</option><option>Seca</option><option>Preñada</option><option>Ternera</option><option>Vendido</option><option>Fallecido</option></select>
 <button class="primary" onclick="saveAnimal()">Guardar animal</button>
-<p class="muted">Para modificar, pulsa “Editar” en la ficha del animal.</p></div>
+<p class="muted">Para modificar un animal, pulsa Editar en su ficha.</p>
+</div>
 <h2>Mi ganado</h2><div id="animalList"></div>
 </section>
 
 <section id="historial" class="panel">
-<div class="formcard"><h3>📋 Respaldo de información</h3>
-<p class="muted">Descarga todos tus datos en un archivo JSON para guardarlos o trasladarlos a otro teléfono.</p>
+<div class="formcard">
+<h3>📋 Respaldo de información</h3>
+<p class="muted">Descarga todos tus datos en un archivo JSON para guardarlos o trasladarlos a otro dispositivo.</p>
 <button class="primary" onclick="backup()">Descargar copia de seguridad</button>
-<label>Restaurar copia (archivo JSON)</label><input id="restoreFile" type="file" accept=".json,application/json">
+<label>Restaurar copia (archivo JSON)</label>
+<input id="restoreFile" type="file" accept=".json,application/json">
 <button class="secondary" onclick="restore()">Restaurar datos desde archivo</button>
 <button class="secondary" onclick="exportCSV()">Exportar registros a CSV</button>
 </div>
@@ -128,43 +235,479 @@ footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px sol
 </section>
 </main>
 <footer>Mi Establo · Datos guardados localmente en este dispositivo</footer>
+
 <script>
 const $=id=>document.getElementById(id);
-const today=()=>new Date().toISOString().slice(0,10);
+const today=()=>new Date().toLocaleDateString('en-CA');
+const makeId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+
 let db=JSON.parse(localStorage.getItem('miEstabloDB')||'null')||{
- animals:[{code:'V001',name:'Vaca 001',breed:'',birth:'',status:'En producción'},{code:'V002',name:'Vaca 002',breed:'',birth:'',status:'En producción'}],
- milk:[],repro:[],health:[]
+ animals:[
+  {code:'V001',name:'Vaca 001',breed:'',birth:'',status:'En producción'},
+  {code:'V002',name:'Vaca 002',breed:'',birth:'',status:'En producción'}
+ ],
+ milk:[],repro:[],health:[],medicines:[],weeklyReports:[]
 };
-function persist(){localStorage.setItem('miEstabloDB',JSON.stringify(db));render()}
-function dateInit(){['mFecha','rFecha','sFecha'].forEach(x=>$(x).value=today())}
-function showTab(id){document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));}
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
-function animalOptions(id){let el=$(id),old=el.value;el.innerHTML=db.animals.filter(a=>!['Vendido','Fallecido'].includes(a.status)).map(a=>`<option value="${esc(a.code)}">${esc(a.code)} · ${esc(a.name)}</option>`).join('');if(old)el.value=old}
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function saveMilk(){let o={date:$('mFecha').value,animal:$('mAnimal').value,am:+$('mManana').value||0,pm:+$('mTarde').value||0,obs:$('mObs').value};if(!o.date||!o.animal||(!o.am&&!o.pm)){alert('Indica fecha, animal y al menos una cantidad de leche.');return}db.milk.unshift(o);$('mManana').value='';$('mTarde').value='';$('mObs').value='';persist();alert('Producción guardada.')}
-function saveRepro(){let o={date:$('rFecha').value,animal:$('rAnimal').value,event:$('rEvento').value,time:$('rHora').value,detail:$('rDetalle').value,obs:$('rObs').value};if(!o.date||!o.animal){alert('Indica fecha y animal.');return}db.repro.unshift(o);$('rDetalle').value='';$('rObs').value='';persist();alert('Evento reproductivo guardado.')}
-function saveHealth(){let o={date:$('sFecha').value,animal:$('sAnimal').value,reason:$('sMotivo').value,medicine:$('sMed').value,dose:$('sDosis').value,route:$('sVia').value,withdrawal:$('sRetiro').value,person:$('sResp').value,obs:$('sObs').value};if(!o.date||!o.animal||!o.medicine){alert('Indica fecha, animal y medicamento o vacuna.');return}db.health.unshift(o);['sMotivo','sMed','sDosis','sRetiro','sResp','sObs'].forEach(x=>$(x).value='');persist();alert('Registro sanitario guardado.')}
-function saveAnimal(){let a={code:$('aCodigo').value.trim().toUpperCase(),name:$('aNombre').value.trim()||$('aCodigo').value.trim(),breed:$('aRaza').value,birth:$('aNac').value,status:$('aEstado').value};if(!a.code){alert('El código es obligatorio.');return}let i=db.animals.findIndex(x=>x.code===a.code);if(i>=0)db.animals[i]=a;else db.animals.push(a);['aCodigo','aNombre','aRaza','aNac'].forEach(x=>$(x).value='');persist();alert('Animal guardado.')}
-function editAnimal(code){let a=db.animals.find(x=>x.code===code);if(!a)return;$('aCodigo').value=a.code;$('aNombre').value=a.name;$('aRaza').value=a.breed;$('aNac').value=a.birth;$('aEstado').value=a.status;showTab('animales');window.scrollTo(0,0)}
-function animalName(code){let a=db.animals.find(x=>x.code===code);return a?`${a.code} · ${a.name}`:code}
-function block(title,sub){return `<div class="entry"><strong>${esc(title)}</strong><br><span class="muted">${esc(sub)}</span></div>`}
-function render(){
-['mAnimal','rAnimal','sAnimal'].forEach(animalOptions);
-$('nAnimales').textContent=db.animals.filter(a=>!['Vendido','Fallecido'].includes(a.status)).length;
-let sum=db.milk.filter(x=>x.date===today()).reduce((n,x)=>n+x.am+x.pm,0);$('litrosHoy').textContent=sum.toFixed(2);
-$('animalList').innerHTML=db.animals.map(a=>`<div class="animal"><strong>${esc(a.code)} · ${esc(a.name)}</strong><br><span class="muted">${esc(a.breed||'Raza no indicada')} · ${esc(a.status)}</span><br><button class="smallbtn" onclick="editAnimal('${esc(a.code)}')">Editar</button></div>`).join('')||'<div class="empty">Aún no hay animales.</div>';
-$('milkList').innerHTML=db.milk.slice(0,12).map(x=>block(`${x.date} · ${animalName(x.animal)}`,`Mañana ${x.am} L + tarde ${x.pm} L = ${(x.am+x.pm).toFixed(2)} L. ${x.obs||''}`)).join('')||'<div class="empty">Todavía no hay producción registrada.</div>';
-$('reproList').innerHTML=db.repro.slice(0,15).map(x=>block(`${x.date} · ${animalName(x.animal)}`,`${x.event}${x.time?' · '+x.time:''}. ${x.detail||''} ${x.obs||''}`)).join('')||'<div class="empty">Todavía no hay eventos reproductivos.</div>';
-$('healthList').innerHTML=db.health.slice(0,15).map(x=>block(`${x.date} · ${animalName(x.animal)}`,`${x.medicine} · ${x.dose||'Dosis no indicada'} · ${x.route}. Motivo: ${x.reason||'No indicado'}. Retiro leche: ${x.withdrawal||'No indicado'} días.`)).join('')||'<div class="empty">Todavía no hay tratamientos registrados.</div>';
-let all=[...db.milk.map(x=>({d:x.date,t:'Leche',a:x.animal,s:`${(x.am+x.pm).toFixed(2)} litros`})),...db.repro.map(x=>({d:x.date,t:'Reproducción',a:x.animal,s:x.event})),...db.health.map(x=>({d:x.date,t:'Sanidad',a:x.animal,s:x.medicine}))].sort((a,b)=>b.d.localeCompare(a.d));
-$('allList').innerHTML=all.slice(0,40).map(x=>block(`${x.d} · ${x.t} · ${animalName(x.a)}`,x.s)).join('')||'<div class="empty">No hay registros todavía.</div>';
-$('ultimos').innerHTML=all.slice(0,4).map(x=>block(`${x.d} · ${x.t} · ${animalName(x.a)}`,x.s)).join('')||'<div class="empty">Registra tu primera producción.</div>';
+
+db.animals ||= [];
+db.milk ||= [];
+db.repro ||= [];
+db.health ||= [];
+db.medicines ||= [];
+db.weeklyReports ||= [];
+
+let currentShift='am';
+let editingMilkId=null;
+
+function esc(s){
+ return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-function backup(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});download(blob,'mi_establo_respaldo_'+today()+'.json')}
-function exportCSV(){let rows=[['Tipo','Fecha','Código','Detalle 1','Detalle 2','Observaciones']];db.milk.forEach(x=>rows.push(['Leche',x.date,x.animal,'Mañana '+x.am+' L','Tarde '+x.pm+' L',x.obs]));db.repro.forEach(x=>rows.push(['Reproducción',x.date,x.animal,x.event,x.detail,x.obs]));db.health.forEach(x=>rows.push(['Sanidad',x.date,x.animal,x.medicine,x.dose+' '+x.route,'Retiro leche: '+x.withdrawal+' días. '+x.obs]));let csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');download(new Blob([csv],{type:'text/csv;charset=utf-8'}),'mi_establo_registros_'+today()+'.csv')}
-function download(blob,name){let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}
-function restore(){let f=$('restoreFile').files[0];if(!f){alert('Selecciona primero tu archivo JSON.');return}let rd=new FileReader();rd.onload=()=>{try{let x=JSON.parse(rd.result);if(!x.animals||!x.milk||!x.repro||!x.health)throw 0;if(!confirm('Esto reemplazará los datos actuales de la aplicación. ¿Continuar?'))return;db=x;persist();alert('Copia restaurada.')}catch(e){alert('El archivo no parece ser una copia válida de Mi Establo.')}};rd.readAsText(f)}
-dateInit();render();
-if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+function persist(){
+ localStorage.setItem('miEstabloDB',JSON.stringify(db));
+ render();
+}
+function showTab(id){
+ document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===id));
+ document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
+}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+
+function activeAnimals(){
+ return db.animals.filter(a=>!['Vendido','Fallecido'].includes(a.status));
+}
+function animalOptions(id){
+ const el=$(id),old=el.value;
+ el.innerHTML=activeAnimals().map(a=>`<option value="${esc(a.code)}">${esc(a.code)} · ${esc(a.name)}</option>`).join('');
+ if(old)el.value=old;
+}
+function animalName(code){
+ const a=db.animals.find(x=>x.code===code);
+ return a?`${a.code} · ${a.name}`:code||'Sin animal';
+}
+function dateInit(){
+ ['mFecha','rFecha','sFecha','weekDate'].forEach(id=>$(id).value=today());
+}
+function findMilk(date,shift){
+ return db.milk.find(x=>x.date===date&&x.shift===shift);
+}
+
+/* Convierte los registros antiguos por animal a reportes por turno.
+   No elimina los datos originales: agrupa mañana y tarde por fecha. */
+function migrateOldMilk(){
+ const old=db.milk.filter(x=>!x.shift);
+ if(!old.length)return;
+ const converted=db.milk.filter(x=>x.shift);
+ old.forEach(x=>{
+  ['am','pm'].forEach(shift=>{
+   const liters=Number(x[shift]||0);
+   if(liters<=0)return;
+   let report=converted.find(r=>r.date===x.date&&r.shift===shift);
+   if(!report){
+    report={id:makeId(),date:x.date,shift,type:'animal',animals:[],total:0,obs:''};
+    converted.push(report);
+   }
+   if(report.type==='animal'){
+    const found=report.animals.find(a=>a.animal===x.animal);
+    if(found)found.liters+=liters;
+    else report.animals.push({animal:x.animal,liters});
+   }
+   if(x.obs)report.obs+=(report.obs?' · ':'')+x.obs;
+  });
+ });
+ db.milk=converted;
+}
+migrateOldMilk();
+
+function chooseShift(shift){
+ if(editingMilkId)return;
+ currentShift=shift;
+ updateMilkForm();
+}
+function dateMilkChanged(){
+ if(editingMilkId)cancelMilkEdit();
+ const date=$('mFecha').value;
+ const morning=findMilk(date,'am');
+ const afternoon=findMilk(date,'pm');
+ if(morning&&!afternoon)currentShift='pm';
+ else if(afternoon&&!morning)currentShift='am';
+ else if(morning&&afternoon)currentShift='am';
+ else currentShift='am';
+ updateMilkForm();
+}
+function updateMilkForm(){
+ const date=$('mFecha').value;
+ const morning=findMilk(date,'am');
+ const afternoon=findMilk(date,'pm');
+ $('btnManana').disabled=!!morning&&!editingMilkId;
+ $('btnTarde').disabled=!!afternoon&&!editingMilkId;
+ $('btnManana').classList.toggle('selected',currentShift==='am');
+ $('btnTarde').classList.toggle('selected',currentShift==='pm');
+
+ const existing=editingMilkId?db.milk.find(x=>x.id===editingMilkId):findMilk(date,currentShift);
+ if(existing&&!editingMilkId){
+  $('shiftStatus').className='status warn';
+  $('shiftStatus').textContent='Este turno ya tiene un reporte. Para modificarlo, pulsa Editar en el historial.';
+  $('btnSaveMilk').disabled=true;
+  $('btnSaveMilk').textContent='Turno ya registrado';
+  lockMilkInputs(true);
+ }else if(editingMilkId){
+  $('shiftStatus').className='status ok';
+  $('shiftStatus').textContent='Estás editando el reporte existente. Los cambios reemplazarán sus datos.';
+  $('btnSaveMilk').disabled=false;
+  $('btnSaveMilk').textContent='Guardar cambios';
+  lockMilkInputs(false);
+ }else{
+  $('shiftStatus').className='status';
+  $('shiftStatus').textContent=currentShift==='am'?'Turno de mañana disponible para registrar.':'Turno de tarde disponible para registrar.';
+  $('btnSaveMilk').disabled=false;
+  $('btnSaveMilk').textContent='Guardar reporte';
+  lockMilkInputs(false);
+ }
+ if(existing&&!editingMilkId)loadMilkData(existing);
+ else if(!editingMilkId)clearMilkFields();
+ $('mTipo').disabled=!!editingMilkId?false:false;
+}
+function lockMilkInputs(lock){
+ ['mTipo','mTotal','mObs'].forEach(id=>$(id).disabled=lock);
+ $('animalMode').querySelectorAll('select,input,button').forEach(el=>el.disabled=lock);
+}
+function clearMilkFields(){
+ $('mTotal').value='';
+ $('mObs').value='';
+ $('mTipo').value='animal';
+ $('animalRows').innerHTML='';
+ addAnimalRow();
+ changeMilkType();
+}
+function addAnimalRow(code='',liters=''){
+ const row=document.createElement('div');
+ row.className='animal-row';
+ const options=activeAnimals().map(a=>`<option value="${esc(a.code)}" ${a.code===code?'selected':''}>${esc(a.code)} · ${esc(a.name)}</option>`).join('');
+ row.innerHTML=`<div><label>Animal</label><select class="milk-animal">${options}</select></div>
+ <div><label>Litros</label><input class="milk-liters" type="number" min="0" step="0.01" placeholder="0.00" value="${liters}"></div>
+ <button type="button" class="danger" onclick="this.parentElement.remove()">Quitar</button>`;
+ $('animalRows').appendChild(row);
+}
+function changeMilkType(){
+ const total=$('mTipo').value==='total';
+ $('animalMode').style.display=total?'none':'block';
+ $('totalMode').style.display=total?'block':'none';
+}
+function loadMilkData(report){
+ $('mTipo').value=report.type||'animal';
+ $('mTotal').value=report.total||'';
+ $('mObs').value=report.obs||'';
+ $('animalRows').innerHTML='';
+ if((report.type||'animal')==='animal'){
+  (report.animals||[]).forEach(a=>addAnimalRow(a.animal,a.liters));
+  if(!report.animals?.length)addAnimalRow();
+ }
+ changeMilkType();
+}
+function editMilk(id){
+ const report=db.milk.find(x=>x.id===id);
+ if(!report)return;
+ editingMilkId=id;
+ $('mFecha').value=report.date;
+ currentShift=report.shift;
+ showTab('leche');
+ $('btnManana').disabled=false;
+ $('btnTarde').disabled=false;
+ $('btnManana').classList.toggle('selected',currentShift==='am');
+ $('btnTarde').classList.toggle('selected',currentShift==='pm');
+ loadMilkData(report);
+ updateMilkForm();
+ $('btnSaveMilk').textContent='Guardar cambios';
+ $('btnCancelEdit').style.display='block';
+ $('mFecha').disabled=true;
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function cancelMilkEdit(){
+ editingMilkId=null;
+ $('mFecha').disabled=false;
+ $('btnCancelEdit').style.display='none';
+ dateMilkChanged();
+}
+function saveMilk(){
+ const date=$('mFecha').value;
+ if(!date){alert('Selecciona la fecha.');return}
+ const existing=findMilk(date,currentShift);
+ if(existing&&!editingMilkId){
+  alert('Ya existe un reporte para ese turno y fecha. Puedes editar el reporte existente.');
+  return;
+ }
+ let report={
+  id:editingMilkId||makeId(),date,shift:currentShift,
+  type:$('mTipo').value,animals:[],total:0,obs:$('mObs').value.trim()
+ };
+ if(report.type==='total'){
+  report.total=Number($('mTotal').value||0);
+  if(report.total<=0){alert('Ingresa una cantidad total de litros mayor que cero.');return}
+ }else{
+  const rows=[...$('animalRows').querySelectorAll('.animal-row')];
+  const seen=new Set();
+  for(const row of rows){
+   const animal=row.querySelector('.milk-animal').value;
+   const liters=Number(row.querySelector('.milk-liters').value||0);
+   if(!animal||liters<=0)continue;
+   if(seen.has(animal)){alert('No repitas el mismo animal en este reporte.');return}
+   seen.add(animal);
+   report.animals.push({animal,liters});
+  }
+  if(!report.animals.length){alert('Agrega al menos una vaca y su producción en litros.');return}
+ }
+ if(editingMilkId){
+  const i=db.milk.findIndex(x=>x.id===editingMilkId);
+  if(i>=0)db.milk[i]=report;
+ }else{
+  db.milk.push(report);
+ }
+ editingMilkId=null;
+ $('mFecha').disabled=false;
+ $('btnCancelEdit').style.display='none';
+ persist();
+ alert('Reporte de producción guardado correctamente.');
+ dateMilkChanged();
+}
+function reportLiters(report){
+ if(report.type==='total')return Number(report.total||0);
+ return (report.animals||[]).reduce((n,a)=>n+Number(a.liters||0),0);
+}
+function reportDescription(report){
+ if(report.type==='total')return `Producción total del establo: ${report.total} L`;
+ return (report.animals||[]).map(a=>`${animalName(a.animal)}: ${a.liters} L`).join(' · ');
+}
+function shiftName(s){return s==='am'?'Mañana':'Tarde'}
+
+function weekStart(date){
+ const d=new Date(date+'T12:00:00');
+ const day=(d.getDay()+6)%7;
+ d.setDate(d.getDate()-day);
+ return d;
+}
+function dateKey(d){
+ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function weekData(date){
+ const start=weekStart(date);
+ const days=[];
+ let total=0;
+ for(let i=0;i<7;i++){
+  const d=new Date(start);
+  d.setDate(start.getDate()+i);
+  const key=dateKey(d);
+  const liters=db.milk.filter(x=>x.date===key).reduce((n,x)=>n+reportLiters(x),0);
+  total+=liters;
+  days.push({date:key,liters});
+ }
+ return {start:dateKey(start),end:days[6].date,days,total};
+}
+function previewWeek(){
+ const date=$('weekDate').value;
+ if(!date)return;
+ const w=weekData(date);
+ const price=Number($('weekPrice').value||0);
+ $('weekPreview').innerHTML=`<strong>Semana: ${w.start} al ${w.end}</strong><br>`+
+ w.days.map(d=>`${d.date}: ${d.liters.toFixed(2)} L`).join('<br>')+
+ `<hr>Total semanal: <strong>${w.total.toFixed(2)} litros</strong><br>`+
+ `Precio: S/ ${price.toFixed(2)} por litro<br>`+
+ `Importe: <strong>S/ ${(w.total*price).toFixed(2)}</strong>`;
+}
+function saveWeeklyReport(){
+ const date=$('weekDate').value;
+ const price=Number($('weekPrice').value);
+ if(!date||price<0){alert('Revisa la fecha y el precio por litro.');return}
+ const w=weekData(date);
+ if(!confirm(`Guardar reporte del ${w.start} al ${w.end} por ${w.total.toFixed(2)} litros?`))return;
+ const report={
+  id:makeId(),start:w.start,end:w.end,days:w.days,
+  total:w.total,price,amount:w.total*price,
+  created:new Date().toISOString()
+ };
+ db.weeklyReports.unshift(report);
+ persist();
+ alert('Reporte semanal guardado.');
+}
+function showWeekly(id){
+ const r=db.weeklyReports.find(x=>x.id===id);
+ if(!r)return;
+ alert(`REPORTE SEMANAL\n${r.start} al ${r.end}\n\n`+
+ r.days.map(d=>`${d.date}: ${Number(d.liters).toFixed(2)} L`).join('\n')+
+ `\n\nTotal: ${Number(r.total).toFixed(2)} L\nPrecio: S/ ${Number(r.price).toFixed(2)}\nTOTAL A COBRAR: S/ ${Number(r.amount).toFixed(2)}`);
+}
+function deleteWeekly(id){
+ if(!confirm('¿Eliminar este reporte semanal guardado?'))return;
+ db.weeklyReports=db.weeklyReports.filter(x=>x.id!==id);
+ persist();
+}
+
+/* Reproducción */
+function saveRepro(){
+ const o={id:makeId(),date:$('rFecha').value,animal:$('rAnimal').value,event:$('rEvento').value,time:$('rHora').value,detail:$('rDetalle').value,obs:$('rObs').value};
+ if(!o.date||!o.animal){alert('Indica fecha y animal.');return}
+ db.repro.unshift(o);
+ ['rDetalle','rObs','rHora'].forEach(x=>$(x).value='');
+ persist();alert('Evento reproductivo guardado.');
+}
+
+/* Catálogo y tratamientos sanitarios */
+function renderMedicines(){
+ $('medicineOptions').innerHTML=db.medicines.map((m,i)=>`<label class="medicine-option"><input type="checkbox" class="med-check" value="${esc(m)}"> ${esc(m)} <button type="button" class="smallbtn" onclick="removeMedicine(${i})">×</button></label>`).join('')||'<div class="muted">Todavía no hay medicamentos en el catálogo.</div>';
+}
+function addMedicine(){
+ const name=$('newMedicine').value.trim();
+ if(!name){alert('Escribe el nombre del medicamento.');return}
+ if(db.medicines.some(x=>x.toLowerCase()===name.toLowerCase())){alert('Ese medicamento ya está en el catálogo.');return}
+ db.medicines.push(name);
+ $('newMedicine').value='';
+ persist();
+}
+function removeMedicine(i){
+ if(!confirm('¿Quitar este medicamento del catálogo? Los tratamientos ya guardados no se eliminan.'))return;
+ db.medicines.splice(i,1);persist();
+}
+function saveHealth(){
+ const medicines=[...document.querySelectorAll('.med-check:checked')].map(x=>x.value);
+ const o={
+  id:makeId(),date:$('sFecha').value,animal:$('sAnimal').value,
+  reason:$('sMotivo').value,medicines,medicine:medicines.join(', '),
+  dose:$('sDosis').value,route:$('sVia').value,
+  withdrawal:$('sRetiro').value,person:$('sResp').value,obs:$('sObs').value
+ };
+ if(!o.date||!o.animal||!medicines.length){alert('Indica fecha, animal y selecciona al menos un medicamento.');return}
+ db.health.unshift(o);
+ ['sMotivo','sDosis','sRetiro','sResp','sObs'].forEach(x=>$(x).value='');
+ document.querySelectorAll('.med-check').forEach(x=>x.checked=false);
+ persist();alert('Tratamiento sanitario guardado.');
+}
+
+/* Animales */
+function saveAnimal(){
+ const a={
+  code:$('aCodigo').value.trim().toUpperCase(),
+  name:$('aNombre').value.trim()||$('aCodigo').value.trim(),
+  breed:$('aRaza').value,birth:$('aNac').value,status:$('aEstado').value
+ };
+ if(!a.code){alert('El código es obligatorio.');return}
+ const i=db.animals.findIndex(x=>x.code===a.code);
+ if(i>=0)db.animals[i]=a;else db.animals.push(a);
+ ['aCodigo','aNombre','aRaza','aNac'].forEach(x=>$(x).value='');
+ persist();alert('Animal guardado.');
+}
+function editAnimal(code){
+ const a=db.animals.find(x=>x.code===code);if(!a)return;
+ $('aCodigo').value=a.code;$('aNombre').value=a.name;
+ $('aRaza').value=a.breed;$('aNac').value=a.birth;$('aEstado').value=a.status;
+ showTab('animales');window.scrollTo(0,0);
+}
+
+/* Historial y presentación */
+function block(title,sub,actions=''){
+ return `<div class="entry"><strong>${esc(title)}</strong><br><span class="muted">${esc(sub)}</span>${actions?`<div class="actions">${actions}</div>`:''}</div>`;
+}
+function render(){
+ ['rAnimal','sAnimal'].forEach(animalOptions);
+ $('nAnimales').textContent=activeAnimals().length;
+ const todayLiters=db.milk.filter(x=>x.date===today()).reduce((n,x)=>n+reportLiters(x),0);
+ $('litrosHoy').textContent=todayLiters.toFixed(2);
+
+ $('animalList').innerHTML=db.animals.map(a=>`<div class="animal">
+ <strong>${esc(a.code)} · ${esc(a.name)}</strong><br>
+ <span class="muted">${esc(a.breed||'Raza no indicada')} · ${esc(a.status)}</span><br>
+ <button class="smallbtn" onclick="editAnimal('${esc(a.code)}')">Editar</button>
+ </div>`).join('')||'<div class="empty">Aún no hay animales.</div>';
+
+ $('milkList').innerHTML=[...db.milk].sort((a,b)=>(b.date+b.shift).localeCompare(a.date+a.shift)).map(x=>{
+  const id=esc(x.id);
+  return block(`${x.date} · ${shiftName(x.shift)} · ${reportLiters(x).toFixed(2)} L`,
+   reportDescription(x)+(x.obs?' · '+x.obs:''),
+   `<button class="smallbtn" onclick="editMilk('${id}')">Editar reporte</button>`);
+ }).join('')||'<div class="empty">Todavía no hay producción registrada.</div>';
+
+ $('weeklyList').innerHTML=db.weeklyReports.map(r=>block(
+  `${r.start} al ${r.end}`,
+  `${Number(r.total).toFixed(2)} L · S/ ${Number(r.price).toFixed(2)}/L · Total S/ ${Number(r.amount).toFixed(2)}`,
+  `<button class="smallbtn" onclick="showWeekly('${esc(r.id)}')">Ver reporte</button>
+   <button class="danger" onclick="deleteWeekly('${esc(r.id)}')">Eliminar</button>`
+ )).join('')||'<div class="empty">Todavía no hay reportes semanales guardados.</div>';
+
+ $('reproList').innerHTML=db.repro.slice(0,20).map(x=>block(
+  `${x.date} · ${animalName(x.animal)}`,
+  `${x.event}${x.time?' · '+x.time:''}. ${x.detail||''} ${x.obs||''}`
+ )).join('')||'<div class="empty">Todavía no hay eventos reproductivos.</div>';
+
+ $('healthList').innerHTML=db.health.slice(0,20).map(x=>block(
+  `${x.date} · ${animalName(x.animal)}`,
+  `${x.medicine||x.medicines?.join(', ')} · ${x.dose||'Dosis no indicada'} · ${x.route||''}. Motivo: ${x.reason||'No indicado'}. Retiro leche: ${x.withdrawal||'No indicado'} días.`
+ )).join('')||'<div class="empty">Todavía no hay tratamientos registrados.</div>';
+
+ const all=[
+  ...db.milk.map(x=>({d:x.date,t:'Leche · '+shiftName(x.shift),a:x.type==='total'?'Producción total':reportDescription(x),s:reportLiters(x).toFixed(2)+' litros'})),
+  ...db.repro.map(x=>({d:x.date,t:'Reproducción',a:animalName(x.animal),s:x.event})),
+  ...db.health.map(x=>({d:x.date,t:'Sanidad',a:animalName(x.animal),s:x.medicine||x.medicines?.join(', ')}))
+ ].sort((a,b)=>b.d.localeCompare(a.d));
+
+ $('allList').innerHTML=all.slice(0,60).map(x=>block(`${x.d} · ${x.t} · ${x.a}`,x.s)).join('')||'<div class="empty">No hay registros todavía.</div>';
+ $('ultimos').innerHTML=all.slice(0,4).map(x=>block(`${x.d} · ${x.t} · ${x.a}`,x.s)).join('')||'<div class="empty">Registra tu primera producción.</div>';
+ renderMedicines();
+}
+
+/* Copia de seguridad, restauración y CSV */
+function download(blob,name){
+ const a=document.createElement('a');
+ const url=URL.createObjectURL(blob);
+ a.href=url;a.download=name;a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function backup(){
+ const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+ download(blob,'mi_establo_respaldo_'+today()+'.json');
+}
+function exportCSV(){
+ const rows=[['Tipo','Fecha','Turno','Animal / detalle','Litros','Observaciones']];
+ db.milk.forEach(x=>rows.push([
+  'Leche',x.date,shiftName(x.shift),
+  x.type==='total'?'Producción total del establo':reportDescription(x),
+  reportLiters(x),x.obs||''
+ ]));
+ db.repro.forEach(x=>rows.push(['Reproducción',x.date,'',animalName(x.animal),x.event+' '+(x.detail||''),x.obs||'']));
+ db.health.forEach(x=>rows.push(['Sanidad',x.date,'',animalName(x.animal),x.medicine||x.medicines?.join(', '),`Dosis: ${x.dose||''}. Vía: ${x.route||''}. Retiro: ${x.withdrawal||''} días. ${x.obs||''}`]));
+ db.weeklyReports.forEach(x=>rows.push(['Reporte semanal',x.start+' al '+x.end,'','Total semanal',x.total,`Precio: S/ ${x.price}. Importe: S/ ${x.amount}`]));
+ const csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');
+ download(new Blob([csv],{type:'text/csv;charset=utf-8'}),'mi_establo_registros_'+today()+'.csv');
+}
+function restore(){
+ const f=$('restoreFile').files[0];
+ if(!f){alert('Selecciona primero tu archivo JSON.');return}
+ const rd=new FileReader();
+ rd.onload=()=>{
+  try{
+   const x=JSON.parse(rd.result);
+   if(!x.animals||!x.milk||!x.repro||!x.health)throw new Error('Formato inválido');
+   if(!confirm('Esto reemplazará los datos actuales de la aplicación. ¿Continuar?'))return;
+   db=x;
+   db.medicines||=[];db.weeklyReports||=[];
+   migrateOldMilk();
+   persist();
+   alert('Copia restaurada correctamente.');
+  }catch(e){alert('El archivo no parece ser una copia válida de Mi Establo.')}
+ };
+ rd.readAsText(f);
+}
+
+/* Inicio */
+dateInit();
+animalOptions('rAnimal');
+animalOptions('sAnimal');
+render();
+$('weekPrice').value='1.80';
+previewWeek();
+dateMilkChanged();
+showTab('leche');
+
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+ navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
 </script>
-</body></html>
+</body>
+</html>
