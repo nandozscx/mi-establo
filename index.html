@@ -22,7 +22,8 @@
 body{margin:0;background:var(--bg);color:var(--ink);font:15px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 header{background:var(--green);color:white;padding:18px 16px;position:sticky;top:0;z-index:10;padding-top:calc(18px + env(safe-area-inset-top))}
 .header-content{display:flex;align-items:center;gap:12px}
-.app-logo{width:48px;height:48px;border-radius:10px;object-fit:cover;border:2px solid rgba(255,255,255,0.3);background:white}
+/* Optimización de logo para evitar colgados */
+.app-logo{width:48px;height:48px;min-width:48px;border-radius:10px;object-fit:cover;border:2px solid rgba(255,255,255,0.3);background:white}
 header h1{margin:0;font-size:20px}
 header p{margin:2px 0 0;color:#DCE8F2;font-size:12px}
 main{max-width:850px;margin:auto;padding:14px 14px 90px}
@@ -94,7 +95,8 @@ footer{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px so
 
 <header>
   <div class="header-content">
-    <img src="logo.png" alt="Yuraq Wasi" class="app-logo">
+    <!-- Logo optimizado para no colgar el celular -->
+    <img src="logo.png" alt="Yuraq Wasi" class="app-logo" width="48" height="48" decoding="async">
     <div>
       <h1>Yuraq Wasi</h1>
       <p>Casa Blanca Establo</p>
@@ -964,28 +966,29 @@ function render(){
 
  $('animalList').innerHTML=db.animals.map(renderAnimalCard).join('')||'<div class="empty">Aún no hay animales.</div>';
 
- $('milkList').innerHTML=[...db.milk].sort((a,b)=>(b.date+b.shift).localeCompare(a.date+a.shift)).map(x=>{
+ // LIMITADOR DE RENDIMIENTO: Solo muestra los últimos 40 registros para no colgar el celular
+ $('milkList').innerHTML=[...db.milk].sort((a,b)=>(b.date+b.shift).localeCompare(a.date+a.shift)).slice(0, 40).map(x=>{
   const id=esc(x.id);
   return block(`${x.date} · ${shiftName(x.shift)} · ${reportLiters(x).toFixed(2)} L`,
    reportDescription(x)+(x.obs?' · '+x.obs:''),
    `<button class="smallbtn" data-edit-milk="${id}">Editar reporte</button>`);
  }).join('')||'<div class="empty">Todavía no hay producción registrada.</div>';
 
- $('weeklyList').innerHTML=db.weeklyReports.map(r=>block(
+ $('weeklyList').innerHTML=db.weeklyReports.slice(0, 15).map(r=>block(
   `${r.start} al ${r.end}`,
   `${Number(r.total).toFixed(2)} L · S/ ${Number(r.price).toFixed(2)}/L · Total S/ ${Number(r.amount).toFixed(2)}`,
   `<button class="smallbtn" data-show-weekly="${esc(r.id)}">Ver reporte</button>
    <button class="danger" data-del-weekly="${esc(r.id)}">Eliminar</button>`
  )).join('')||'<div class="empty">Todavía no hay reportes semanales guardados.</div>';
 
- $('reproList').innerHTML=db.repro.slice(0,20).map(x=>block(
+ $('reproList').innerHTML=db.repro.slice(0, 30).map(x=>block(
   `${x.date} · ${animalName(x.animal)}`,
   `${x.event}${x.time?' · '+x.time:''}. ${x.detail||''} ${x.obs||''}`,
   `<button class="smallbtn" data-edit-repro="${esc(x.id)}">Editar</button>
    <button class="danger" data-del-repro="${esc(x.id)}">Eliminar</button>`
  )).join('')||'<div class="empty">Todavía no hay eventos reproductivos.</div>';
 
- $('healthList').innerHTML=db.health.slice(0,20).map(x=>block(
+ $('healthList').innerHTML=db.health.slice(0, 30).map(x=>block(
   `${x.date} · ${animalName(x.animal)}`,
   `${x.medicine||x.medicines?.join(', ')} · ${x.dose||'Dosis no indicada'} · ${x.route||''}. Motivo: ${x.reason||'No indicado'}. Retiro leche: ${x.withdrawal||'No indicado'} días.`,
   `<button class="smallbtn" data-edit-health="${esc(x.id)}">Editar</button>
@@ -1091,6 +1094,16 @@ previewWeek();
 dateMilkChanged();
 showTab('leche');
 
+// PREVENIR PÉRDIDA DE DATOS: Solicita a Android que no borre los datos de la app
+if (navigator.storage && navigator.storage.persist) {
+  navigator.storage.persist().then(granted => {
+    if (granted) {
+      console.log("Almacenamiento persistente concedido. Los datos están seguros.");
+    }
+  });
+}
+
+// Registrar Service Worker (solo si es http/https)
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
  navigator.serviceWorker.register('./sw.js').catch(()=>{});
 }
