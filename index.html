@@ -1,28 +1,33 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#102A43">
-<meta name="description" content="Control de ganado lechero">
-<title>Mi Establo</title>
+<meta name="description" content="Control de ganado lechero - Yuraq Wasi">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Yuraq Wasi - Casa Blanca</title>
 <link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
 <style>
 :root{
  --green:#102A43;--green2:#163F5C;--bg:#F1F5F9;
- --card:#FFFFFF;--ink:#243B53;--muted:#627D98;
+ --card:#FFFFFF;--ink:#243B53;--muted:#4A6072;
  --line:#CBD5E1;--red:#B91C1C;--blue:#1769AA;
  --blue-light:#DCEEFF;--orange:#B45309;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-header{background:var(--green);color:white;padding:18px 16px;position:sticky;top:0;z-index:10}
-header h1{margin:0;font-size:23px}
-header p{margin:4px 0 0;color:#DCE8F2;font-size:13px}
+header{background:var(--green);color:white;padding:18px 16px;position:sticky;top:0;z-index:10;padding-top:calc(18px + env(safe-area-inset-top))}
+.header-content{display:flex;align-items:center;gap:12px}
+.app-logo{width:48px;height:48px;border-radius:10px;object-fit:cover;border:2px solid rgba(255,255,255,0.3);background:white}
+header h1{margin:0;font-size:20px}
+header p{margin:2px 0 0;color:#DCE8F2;font-size:12px}
 main{max-width:850px;margin:auto;padding:14px 14px 90px}
 nav{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
-nav button,.quick button{border:1px solid var(--line);background:white;border-radius:12px;padding:12px 5px;font-weight:650;color:var(--green);font-size:13px}
+nav button,.quick button{border:1px solid var(--line);background:white;border-radius:12px;padding:12px 5px;font-weight:650;color:var(--green);font-size:13px;cursor:pointer}
 nav button.active{background:var(--green);color:white;border-color:var(--green)}
 .panel{display:none}.panel.active{display:block}
 .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
@@ -47,29 +52,54 @@ input:disabled,select:disabled,textarea:disabled{background:#E9EEF3;color:#8494A
 .entry{border-bottom:1px solid var(--line);padding:11px 0;font-size:14px}
 .entry:last-child{border:0}
 .pill{display:inline-block;background:var(--blue-light);color:var(--blue);border-radius:30px;padding:4px 9px;font-size:11px;font-weight:700}
+.pill.ok{background:#DCFCE7;color:#166534}
+.pill.ext{background:#E2E8F0;color:#475569}
 .status{padding:10px;border-radius:10px;background:#EAF2F8;color:var(--green);font-size:13px;margin-top:10px}
 .status.ok{background:#DCFCE7;color:#166534}
 .status.warn{background:#FEF3C7;color:#92400E}
+.status.alert{background:#FEE2E2;color:#991B1B}
 .empty{padding:18px;text-align:center;color:var(--muted);background:white;border-radius:12px}
-footer{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--line);padding:9px 14px;text-align:center;color:var(--muted);font-size:11px}
+footer{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--line);padding:9px 14px;text-align:center;color:var(--muted);font-size:11px;padding-bottom:calc(9px + env(safe-area-inset-bottom))}
 .shift-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:8px}
-.shift-btn{border:1px solid var(--line);background:white;color:var(--green);border-radius:10px;padding:12px;font-weight:700}
+.shift-btn{border:1px solid var(--line);background:white;color:var(--green);border-radius:10px;padding:12px;font-weight:700;cursor:pointer}
 .shift-btn.selected{background:var(--green);color:white}
 .shift-btn:disabled{background:#E2E8F0;color:#94A3B8;cursor:not-allowed}
 .animal-row{display:grid;grid-template-columns:1.2fr 1fr auto;gap:7px;align-items:end;margin:8px 0}
 .animal-row button{padding:10px}
 .medicine-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-.medicine-option{border:1px solid var(--line);padding:9px;border-radius:9px;background:#F8FAFC;font-size:13px}
-.medicine-option input{width:auto;margin-right:5px}
+.medicine-option{border:1px solid var(--line);padding:9px;border-radius:9px;background:#F8FAFC;font-size:13px;display:flex;align-items:center;gap:6px}
+.medicine-option input{width:auto;margin:0}
+.check-label{display:flex;align-items:center;gap:8px;margin-top:11px;font-size:13px;font-weight:650}
+.check-label input{width:auto;margin:0}
 .actions{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.lineage{margin-top:9px;padding-top:9px;border-top:1px dashed var(--line);font-size:13px;line-height:1.7}
+.lineage .lrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.lineage .lrow .lbl{font-weight:650;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:#0F172A;color:white;padding:11px 16px;border-radius:10px;font-size:13px;z-index:9999;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;max-width:90%}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(-6px)}
+.toast.error{background:#7F1D1D}
+.modal-back{position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:9000;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-back.show{display:flex}
+.modal{background:white;border-radius:14px;max-width:520px;width:100%;max-height:85vh;overflow:auto;padding:16px}
+.modal h3{margin-top:0}
+.modal pre{white-space:pre-wrap;background:#F1F5F9;padding:12px;border-radius:10px;font-size:12px}
 @media(min-width:650px){nav{grid-template-columns:repeat(6,1fr)}.quick{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:430px){.animal-row{grid-template-columns:1fr 1fr}.animal-row button{grid-column:span 2}.medicine-list{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+<noscript>
+<p style="padding:20px;background:#FEE2E2;color:#991B1B;text-align:center">Mi Establo necesita JavaScript para funcionar. Actívalo en tu navegador.</p>
+</noscript>
+
 <header>
-<h1>🐄 Mi Establo</h1>
-<p>Control diario de ganado lechero</p>
+  <div class="header-content">
+    <img src="logo.png" alt="Yuraq Wasi" class="app-logo">
+    <div>
+      <h1>Yuraq Wasi</h1>
+      <p>Casa Blanca Establo</p>
+    </div>
+  </div>
 </header>
 
 <main>
@@ -87,14 +117,15 @@ footer{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px so
  <div class="card"><div class="kicker">Animales activos</div><div class="big" id="nAnimales">0</div></div>
  <div class="card"><div class="kicker">Leche registrada hoy</div><div class="big"><span id="litrosHoy">0.00</span> L</div></div>
 </div>
+<div id="withdrawalAlert"></div>
 <h2>Accesos rápidos</h2>
 <div class="quick">
-<button onclick="showTab('leche')">🥛 Registrar producción</button>
-<button onclick="showTab('repro')">❤️ Reproducción</button>
-<button onclick="showTab('sanidad')">💉 Sanidad</button>
-<button onclick="showTab('animales')">🐄 Mis animales</button>
-<button onclick="showTab('historial')">📋 Historial y reportes</button>
-<button onclick="backup()">⬇️ Copia de seguridad</button>
+<button data-goto="leche">🥛 Registrar producción</button>
+<button data-goto="repro">❤️ Reproducción</button>
+<button data-goto="sanidad">💉 Sanidad</button>
+<button data-goto="animales">🐄 Mis animales</button>
+<button data-goto="historial">📋 Historial y reportes</button>
+<button data-backup="1">⬇️ Copia de seguridad</button>
 </div>
 <h2>Últimos movimientos</h2>
 <div id="ultimos"></div>
@@ -115,19 +146,19 @@ footer{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px so
 
 <label>Modalidad de registro</label>
 <select id="mTipo" onchange="changeMilkType()">
+<option value="total" selected>Producción total del establo</option>
 <option value="animal">Por animal</option>
-<option value="total">Producción total del establo</option>
 </select>
 
-<div id="animalMode">
+<div id="totalMode">
+<label>Producción total del establo (litros)</label>
+<input id="mTotal" type="number" min="0" step="0.01" placeholder="Ej. 18.50">
+</div>
+
+<div id="animalMode" style="display:none">
 <p class="muted">Agrega una o varias vacas al mismo reporte. Cada vaca debe aparecer una sola vez en este turno.</p>
 <div id="animalRows"></div>
 <button type="button" class="secondary" onclick="addAnimalRow()">＋ Agregar otra vaca</button>
-</div>
-
-<div id="totalMode" style="display:none">
-<label>Producción total del establo (litros)</label>
-<input id="mTotal" type="number" min="0" step="0.01" placeholder="Ej. 18.50">
 </div>
 
 <label>Observaciones</label>
@@ -137,20 +168,21 @@ footer{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px so
 <p class="muted">Solo puede existir un reporte de mañana y uno de tarde por fecha. Si el turno ya fue registrado, podrás editarlo, pero no crear otro.</p>
 </div>
 
-<h2>Reportes de producción</h2>
-<div id="milkList"></div>
-
 <h2>📊 Reportes semanales</h2>
 <div class="formcard">
 <label>Seleccionar una fecha de la semana</label>
 <input id="weekDate" type="date" onchange="previewWeek()">
 <label>Precio de venta por litro (S/)</label>
-<input id="weekPrice" type="number" min="0" step="0.01" value="1.80" oninput="previewWeek()">
+<input id="weekPrice" type="number" min="0" step="0.01" value="2" oninput="previewWeek()">
 <div id="weekPreview" class="status">Selecciona una fecha para calcular la semana.</div>
 <button class="primary" onclick="saveWeeklyReport()">Guardar reporte semanal</button>
+<p class="muted">El reporte guardado es una foto del momento. Si editas registros de leche de esa semana después, el reporte guardado no se recalcula.</p>
 </div>
 <h2>Reportes semanales guardados</h2>
 <div id="weeklyList"></div>
+
+<h2>Reportes de producción</h2>
+<div id="milkList"></div>
 </section>
 
 <section id="repro" class="panel">
@@ -165,7 +197,9 @@ footer{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px so
 <option>Aborto</option><option>Parto</option><option>Secado</option><option>Otro</option>
 </select>
 <label>Hora (opcional)</label><input id="rHora" type="time">
-<label>Toro / pajilla / técnico</label><input id="rDetalle" placeholder="Identificación del toro o pajilla">
+<label>Toro / pajilla / técnico</label>
+<input id="rDetalle" list="siresList" placeholder="Identificación del toro o pajilla">
+<datalist id="siresList"></datalist>
 <label>Resultado y observaciones</label><textarea id="rObs"></textarea>
 <button class="primary" onclick="saveRepro()">Guardar evento</button>
 </div>
@@ -209,12 +243,37 @@ footer{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px so
 <h3>🐄 Agregar / editar animal</h3>
 <label>Código (obligatorio)</label><input id="aCodigo" placeholder="Ej. V003">
 <label>Nombre</label><input id="aNombre" placeholder="Ej. Lucera">
+
 <div class="row">
-<div><label>Raza</label><input id="aRaza" placeholder="Ej. Brown Swiss"></div>
-<div><label>Fecha de nacimiento</label><input id="aNac" type="date"></div>
+<div><label>Raza</label><input id="aRaza" placeholder="Ej. Brown Swiss" value="Brown Swiss"></div>
+<div><label>Sexo</label>
+<select id="aSexo" onchange="updateSexUI()"><option>Hembra</option><option>Macho</option></select>
 </div>
+</div>
+
+<label>Fecha de nacimiento</label><input id="aNac" type="date">
+
+<div class="row">
+<div>
+<label>Madre</label>
+<input id="aMadre" list="damsList" placeholder="Elige o escribe">
+<datalist id="damsList"></datalist>
+</div>
+<div>
+<label>Padre</label>
+<input id="aPadre" list="siresListAnimal" placeholder="Toro o pajilla">
+<datalist id="siresListAnimal"></datalist>
+</div>
+</div>
+<p class="muted">Las sugerencias se basan en animales registrados y en los toros/pajillas ya usados en Reproducción. Puedes escribir un nombre nuevo si la madre o el padre no están registrados.</p>
+
 <label>Estado</label>
-<select id="aEstado"><option>En producción</option><option>Seca</option><option>Preñada</option><option>Ternera</option><option>Vendido</option><option>Fallecido</option></select>
+<select id="aEstado"><option>En producción</option><option>Seca</option><option>Ternera</option><option>Vendido</option><option>Fallecido</option></select>
+
+<div id="prenadaWrap">
+<label class="check-label"><input type="checkbox" id="aPrenada"> Está preñada</label>
+</div>
+
 <button class="primary" onclick="saveAnimal()">Guardar animal</button>
 <p class="muted">Para modificar un animal, pulsa Editar en su ficha.</p>
 </div>
@@ -236,19 +295,48 @@ footer{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px so
 </main>
 <footer>Mi Establo · Datos guardados localmente en este dispositivo</footer>
 
+<div id="toast" class="toast"></div>
+<div id="modalBack" class="modal-back" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h3 id="modalTitle">Reporte</h3>
+    <pre id="modalBody"></pre>
+    <button class="primary" onclick="closeModal()">Cerrar</button>
+  </div>
+</div>
+
 <script>
+/* ============ Helpers ============ */
 const $=id=>document.getElementById(id);
 const today=()=>new Date().toLocaleDateString('en-CA');
 const makeId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 
+let toastTimer=null;
+function toast(msg,isError=false){
+  const t=$('toast');
+  t.textContent=msg;
+  t.className='toast show'+(isError?' error':'');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{t.className='toast'+(isError?' error':'')},2600);
+}
+function openModal(title,body){
+  $('modalTitle').textContent=title;
+  $('modalBody').textContent=body;
+  $('modalBack').classList.add('show');
+}
+function closeModal(){ $('modalBack').classList.remove('show'); }
+
+function esc(s){
+ return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ============ Estado ============ */
 let db=JSON.parse(localStorage.getItem('miEstabloDB')||'null')||{
  animals:[
-  {code:'V001',name:'Vaca 001',breed:'',birth:'',status:'En producción'},
-  {code:'V002',name:'Vaca 002',breed:'',birth:'',status:'En producción'}
+  {code:'V001',name:'Vaca 001',breed:'Brown Swiss',birth:'',status:'En producción',father:'',mother:'',pregnant:false,sex:'Hembra'},
+  {code:'V002',name:'Vaca 002',breed:'Brown Swiss',birth:'',status:'En producción',father:'',mother:'',pregnant:false,sex:'Hembra'}
  ],
  milk:[],repro:[],health:[],medicines:[],weeklyReports:[]
 };
-
 db.animals ||= [];
 db.milk ||= [];
 db.repro ||= [];
@@ -259,26 +347,124 @@ db.weeklyReports ||= [];
 let currentShift='am';
 let editingMilkId=null;
 
-function esc(s){
- return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
+/* ============ Persistencia ============ */
 function persist(){
- localStorage.setItem('miEstabloDB',JSON.stringify(db));
- render();
+  try{
+    localStorage.setItem('miEstabloDB',JSON.stringify(db));
+  }catch(e){
+    toast('No se pudo guardar: almacenamiento lleno. Descarga una copia de seguridad.',true);
+  }
+  render();
 }
+
+/* ============ Navegación ============ */
 function showTab(id){
  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===id));
  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
 }
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
 
+document.addEventListener('click',e=>{
+  const goto=e.target.closest('[data-goto]');
+  if(goto){showTab(goto.dataset.goto);return}
+  const backupBtn=e.target.closest('[data-backup]');
+  if(backupBtn){backup();return}
+});
+
+/* ============ Migración de animales ============ */
+function migrateAnimals(){
+  db.animals.forEach(a=>{
+    if(a.pregnant === undefined) a.pregnant = false;
+    if(a.father === undefined) a.father = '';
+    if(a.mother === undefined) a.mother = '';
+    if(a.sex === undefined) a.sex = 'Hembra';
+    if(a.status === 'Preñada'){
+      a.status = 'En producción';
+      a.pregnant = true;
+    }
+  });
+}
+migrateAnimals();
+
+/* ============ Genealogía: match y sugerencias ============ */
+function matchAnimal(texto){
+  if(!texto) return null;
+  const t = String(texto).trim().toLowerCase();
+  return db.animals.find(a =>
+    a.code.toLowerCase() === t ||
+    (a.code+' · '+a.name).toLowerCase() === t ||
+    a.name.toLowerCase() === t
+  ) || null;
+}
+
+function getDamSuggestions(){
+  return db.animals
+    .filter(a => (a.sex||'Hembra') === 'Hembra')
+    .map(a => `${a.code} · ${a.name}`)
+    .sort();
+}
+
+function getSireSuggestions(){
+  const set = new Set();
+  db.repro.forEach(r=>{
+    if(['Servicio natural','Inseminación artificial'].includes(r.event) && r.detail && r.detail.trim()){
+      set.add(r.detail.trim());
+    }
+  });
+  db.animals.forEach(a=>{
+    if((a.sex||'Hembra') === 'Macho'){
+      set.add(`${a.code} · ${a.name}`);
+    }
+  });
+  return [...set].sort();
+}
+
+function refreshDatalists(){
+  const dams = getDamSuggestions();
+  const sires = getSireSuggestions();
+  const damsHTML = dams.map(v=>`<option value="${esc(v)}"></option>`).join('');
+  const siresHTML = sires.map(v=>`<option value="${esc(v)}"></option>`).join('');
+  const d1=$('damsList'); if(d1) d1.innerHTML = damsHTML;
+  const d2=$('siresListAnimal'); if(d2) d2.innerHTML = siresHTML;
+  const d3=$('siresList'); if(d3) d3.innerHTML = siresHTML;
+}
+
+function buildMaternalLineage(animal){
+  const chain = [];
+  const seen = new Set([animal.code]);
+  let current = animal;
+  for(let i=0;i<3;i++){
+    const mother = matchAnimal(current.mother);
+    if(!mother || seen.has(mother.code)) break;
+    seen.add(mother.code);
+    chain.push(`${mother.code} · ${mother.name}`);
+    current = mother;
+  }
+  return chain;
+}
+
+function wouldCreateCycle(code, motherText){
+  if(!motherText) return false;
+  let current = matchAnimal(motherText);
+  const seen = new Set([code]);
+  let hops = 0;
+  while(current && hops < 10){
+    if(seen.has(current.code)) return true;
+    seen.add(current.code);
+    current = matchAnimal(current.mother);
+    hops++;
+  }
+  return false;
+}
+
+/* ============ Animales ============ */
 function activeAnimals(){
  return db.animals.filter(a=>!['Vendido','Fallecido'].includes(a.status));
 }
 function animalOptions(id){
  const el=$(id),old=el.value;
  el.innerHTML=activeAnimals().map(a=>`<option value="${esc(a.code)}">${esc(a.code)} · ${esc(a.name)}</option>`).join('');
- if(old)el.value=old;
+ if(old && [...el.options].some(o=>o.value===old)) el.value=old;
 }
 function animalName(code){
  const a=db.animals.find(x=>x.code===code);
@@ -290,9 +476,12 @@ function dateInit(){
 function findMilk(date,shift){
  return db.milk.find(x=>x.date===date&&x.shift===shift);
 }
+function updateSexUI(){
+  const isFemale = $('aSexo').value === 'Hembra';
+  $('prenadaWrap').style.display = isFemale ? 'block' : 'none';
+  if(!isFemale) $('aPrenada').checked = false;
+}
 
-/* Convierte los registros antiguos por animal a reportes por turno.
-   No elimina los datos originales: agrupa mañana y tarde por fecha. */
 function migrateOldMilk(){
  const old=db.milk.filter(x=>!x.shift);
  if(!old.length)return;
@@ -318,6 +507,7 @@ function migrateOldMilk(){
 }
 migrateOldMilk();
 
+/* ============ Leche ============ */
 function chooseShift(shift){
  if(editingMilkId)return;
  currentShift=shift;
@@ -330,7 +520,6 @@ function dateMilkChanged(){
  const afternoon=findMilk(date,'pm');
  if(morning&&!afternoon)currentShift='pm';
  else if(afternoon&&!morning)currentShift='am';
- else if(morning&&afternoon)currentShift='am';
  else currentShift='am';
  updateMilkForm();
 }
@@ -365,16 +554,16 @@ function updateMilkForm(){
  }
  if(existing&&!editingMilkId)loadMilkData(existing);
  else if(!editingMilkId)clearMilkFields();
- $('mTipo').disabled=!!editingMilkId?false:false;
 }
 function lockMilkInputs(lock){
+ if(lock && !editingMilkId) $('mFecha').disabled=true;
  ['mTipo','mTotal','mObs'].forEach(id=>$(id).disabled=lock);
  $('animalMode').querySelectorAll('select,input,button').forEach(el=>el.disabled=lock);
 }
 function clearMilkFields(){
  $('mTotal').value='';
  $('mObs').value='';
- $('mTipo').value='animal';
+ $('mTipo').value='total';
  $('animalRows').innerHTML='';
  addAnimalRow();
  changeMilkType();
@@ -385,9 +574,13 @@ function addAnimalRow(code='',liters=''){
  const options=activeAnimals().map(a=>`<option value="${esc(a.code)}" ${a.code===code?'selected':''}>${esc(a.code)} · ${esc(a.name)}</option>`).join('');
  row.innerHTML=`<div><label>Animal</label><select class="milk-animal">${options}</select></div>
  <div><label>Litros</label><input class="milk-liters" type="number" min="0" step="0.01" placeholder="0.00" value="${liters}"></div>
- <button type="button" class="danger" onclick="this.parentElement.remove()">Quitar</button>`;
+ <button type="button" class="danger" data-remove-row="1">Quitar</button>`;
  $('animalRows').appendChild(row);
 }
+document.addEventListener('click',e=>{
+  const btn=e.target.closest('[data-remove-row]');
+  if(btn){btn.closest('.animal-row').remove()}
+});
 function changeMilkType(){
  const total=$('mTipo').value==='total';
  $('animalMode').style.display=total?'none':'block';
@@ -409,17 +602,17 @@ function editMilk(id){
  if(!report)return;
  editingMilkId=id;
  $('mFecha').value=report.date;
+ $('mFecha').disabled=true;
  currentShift=report.shift;
  showTab('leche');
- $('btnManana').disabled=false;
- $('btnTarde').disabled=false;
+ $('btnManana').disabled=true;
+ $('btnTarde').disabled=true;
  $('btnManana').classList.toggle('selected',currentShift==='am');
  $('btnTarde').classList.toggle('selected',currentShift==='pm');
  loadMilkData(report);
  updateMilkForm();
  $('btnSaveMilk').textContent='Guardar cambios';
  $('btnCancelEdit').style.display='block';
- $('mFecha').disabled=true;
  window.scrollTo({top:0,behavior:'smooth'});
 }
 function cancelMilkEdit(){
@@ -430,10 +623,12 @@ function cancelMilkEdit(){
 }
 function saveMilk(){
  const date=$('mFecha').value;
- if(!date){alert('Selecciona la fecha.');return}
+ if(!date){toast('Selecciona la fecha.',true);return}
+ if(date>today()){toast('No puedes registrar una fecha futura.',true);return}
+
  const existing=findMilk(date,currentShift);
  if(existing&&!editingMilkId){
-  alert('Ya existe un reporte para ese turno y fecha. Puedes editar el reporte existente.');
+  toast('Ya existe un reporte para ese turno y fecha. Edita el reporte existente.',true);
   return;
  }
  let report={
@@ -442,7 +637,7 @@ function saveMilk(){
  };
  if(report.type==='total'){
   report.total=Number($('mTotal').value||0);
-  if(report.total<=0){alert('Ingresa una cantidad total de litros mayor que cero.');return}
+  if(report.total<=0){toast('Ingresa una cantidad total de litros mayor que cero.',true);return}
  }else{
   const rows=[...$('animalRows').querySelectorAll('.animal-row')];
   const seen=new Set();
@@ -450,12 +645,19 @@ function saveMilk(){
    const animal=row.querySelector('.milk-animal').value;
    const liters=Number(row.querySelector('.milk-liters').value||0);
    if(!animal||liters<=0)continue;
-   if(seen.has(animal)){alert('No repitas el mismo animal en este reporte.');return}
+   if(seen.has(animal)){toast('No repitas el mismo animal en este reporte.',true);return}
    seen.add(animal);
    report.animals.push({animal,liters});
   }
-  if(!report.animals.length){alert('Agrega al menos una vaca y su producción en litros.');return}
+  if(!report.animals.length){toast('Agrega al menos una vaca y su producción en litros.',true);return}
+
+  const inRetiro=report.animals.map(a=>a.animal).filter(c=>isInWithdrawal(c,date));
+  if(inRetiro.length){
+    const ok=confirm('⚠️ Estos animales están en periodo de retiro de leche: '+inRetiro.join(', ')+'.\n¿Registrar de todas formas? (No comercializar su leche)');
+    if(!ok)return;
+  }
  }
+
  if(editingMilkId){
   const i=db.milk.findIndex(x=>x.id===editingMilkId);
   if(i>=0)db.milk[i]=report;
@@ -466,7 +668,7 @@ function saveMilk(){
  $('mFecha').disabled=false;
  $('btnCancelEdit').style.display='none';
  persist();
- alert('Reporte de producción guardado correctamente.');
+ toast('Reporte de producción guardado correctamente.');
  dateMilkChanged();
 }
 function reportLiters(report){
@@ -479,6 +681,34 @@ function reportDescription(report){
 }
 function shiftName(s){return s==='am'?'Mañana':'Tarde'}
 
+/* ============ Retiro de leche ============ */
+function withdrawalEndDate(h){
+  if(!h.withdrawal || Number(h.withdrawal)<=0) return null;
+  const start=new Date(h.date+'T12:00:00');
+  if(isNaN(start)) return null;
+  const end=new Date(start);
+  end.setDate(end.getDate()+Number(h.withdrawal));
+  return end;
+}
+function isInWithdrawal(code,dateStr){
+  const d=new Date((dateStr||today())+'T12:00:00');
+  return db.health.some(h=>{
+    if(h.animal!==code) return false;
+    const end=withdrawalEndDate(h);
+    if(!end) return false;
+    const start=new Date(h.date+'T12:00:00');
+    return d>=start && d<end;
+  });
+}
+function animalsInWithdrawalNow(){
+  const seen=new Set();
+  return db.health
+    .filter(h=>isInWithdrawal(h.animal,today()))
+    .filter(h=>{if(seen.has(h.animal))return false;seen.add(h.animal);return true;})
+    .map(h=>({code:h.animal, end:withdrawalEndDate(h)}));
+}
+
+/* ============ Reportes semanales ============ */
 function weekStart(date){
  const d=new Date(date+'T12:00:00');
  const day=(d.getDay()+6)%7;
@@ -487,6 +717,10 @@ function weekStart(date){
 }
 function dateKey(d){
  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function shortDate(key){
+  const d=new Date(key+'T12:00:00');
+  return d.toLocaleDateString('es-PE',{weekday:'short',day:'2-digit',month:'short'});
 }
 function weekData(date){
  const start=weekStart(date);
@@ -504,11 +738,11 @@ function weekData(date){
 }
 function previewWeek(){
  const date=$('weekDate').value;
- if(!date)return;
+ if(!date){$('weekPreview').textContent='Selecciona una fecha para calcular la semana.';return}
  const w=weekData(date);
  const price=Number($('weekPrice').value||0);
- $('weekPreview').innerHTML=`<strong>Semana: ${w.start} al ${w.end}</strong><br>`+
- w.days.map(d=>`${d.date}: ${d.liters.toFixed(2)} L`).join('<br>')+
+ $('weekPreview').innerHTML=`<strong>Semana: ${shortDate(w.start)} al ${shortDate(w.end)}</strong><br>`+
+ w.days.map(d=>`${shortDate(d.date)}: ${d.liters.toFixed(2)} L`).join('<br>')+
  `<hr>Total semanal: <strong>${w.total.toFixed(2)} litros</strong><br>`+
  `Precio: S/ ${price.toFixed(2)} por litro<br>`+
  `Importe: <strong>S/ ${(w.total*price).toFixed(2)}</strong>`;
@@ -516,7 +750,7 @@ function previewWeek(){
 function saveWeeklyReport(){
  const date=$('weekDate').value;
  const price=Number($('weekPrice').value);
- if(!date||price<0){alert('Revisa la fecha y el precio por litro.');return}
+ if(!date||price<0){toast('Revisa la fecha y el precio por litro.',true);return}
  const w=weekData(date);
  if(!confirm(`Guardar reporte del ${w.start} al ${w.end} por ${w.total.toFixed(2)} litros?`))return;
  const report={
@@ -526,45 +760,70 @@ function saveWeeklyReport(){
  };
  db.weeklyReports.unshift(report);
  persist();
- alert('Reporte semanal guardado.');
+ previewWeek();
+ toast('Reporte semanal guardado.');
 }
 function showWeekly(id){
  const r=db.weeklyReports.find(x=>x.id===id);
  if(!r)return;
- alert(`REPORTE SEMANAL\n${r.start} al ${r.end}\n\n`+
- r.days.map(d=>`${d.date}: ${Number(d.liters).toFixed(2)} L`).join('\n')+
- `\n\nTotal: ${Number(r.total).toFixed(2)} L\nPrecio: S/ ${Number(r.price).toFixed(2)}\nTOTAL A COBRAR: S/ ${Number(r.amount).toFixed(2)}`);
+ const body=`${shortDate(r.start)} al ${shortDate(r.end)}\n\n`+
+ r.days.map(d=>`${shortDate(d.date)}: ${Number(d.liters).toFixed(2)} L`).join('\n')+
+ `\n\nTotal: ${Number(r.total).toFixed(2)} L\nPrecio: S/ ${Number(r.price).toFixed(2)}/L\nTOTAL A COBRAR: S/ ${Number(r.amount).toFixed(2)}`;
+ openModal('📊 Reporte semanal',body);
 }
 function deleteWeekly(id){
  if(!confirm('¿Eliminar este reporte semanal guardado?'))return;
  db.weeklyReports=db.weeklyReports.filter(x=>x.id!==id);
  persist();
+ toast('Reporte semanal eliminado.');
 }
 
-/* Reproducción */
+/* ============ Reproducción ============ */
 function saveRepro(){
  const o={id:makeId(),date:$('rFecha').value,animal:$('rAnimal').value,event:$('rEvento').value,time:$('rHora').value,detail:$('rDetalle').value,obs:$('rObs').value};
- if(!o.date||!o.animal){alert('Indica fecha y animal.');return}
+ if(!o.date||!o.animal){toast('Indica fecha y animal.',true);return}
  db.repro.unshift(o);
  ['rDetalle','rObs','rHora'].forEach(x=>$(x).value='');
- persist();alert('Evento reproductivo guardado.');
+ persist();toast('Evento reproductivo guardado.');
+}
+function editRepro(id){
+ const r=db.repro.find(x=>x.id===id);if(!r)return;
+ $('rFecha').value=r.date;$('rAnimal').value=r.animal;$('rEvento').value=r.event;
+ $('rHora').value=r.time||'';$('rDetalle').value=r.detail||'';$('rObs').value=r.obs||'';
+ db.repro=db.repro.filter(x=>x.id!==id);
+ persist();
+ showTab('repro');
+ toast('Evento cargado para editar. Guarda de nuevo al terminar.');
+}
+function deleteRepro(id){
+ if(!confirm('¿Eliminar este evento reproductivo?'))return;
+ db.repro=db.repro.filter(x=>x.id!==id);
+ persist();toast('Evento eliminado.');
 }
 
-/* Catálogo y tratamientos sanitarios */
+/* ============ Catálogo y tratamientos sanitarios ============ */
 function renderMedicines(){
- $('medicineOptions').innerHTML=db.medicines.map((m,i)=>`<label class="medicine-option"><input type="checkbox" class="med-check" value="${esc(m)}"> ${esc(m)} <button type="button" class="smallbtn" onclick="removeMedicine(${i})">×</button></label>`).join('')||'<div class="muted">Todavía no hay medicamentos en el catálogo.</div>';
+ $('medicineOptions').innerHTML=db.medicines.map(m=>`<label class="medicine-option"><input type="checkbox" class="med-check" value="${esc(m)}"> ${esc(m)} <button type="button" class="smallbtn" data-remove-med="${esc(m)}">×</button></label>`).join('')||'<div class="muted">Todavía no hay medicamentos en el catálogo.</div>';
 }
+document.addEventListener('click',e=>{
+  const btn=e.target.closest('[data-remove-med]');
+  if(btn){
+    e.preventDefault();
+    removeMedicine(btn.dataset.removeMed);
+  }
+});
 function addMedicine(){
  const name=$('newMedicine').value.trim();
- if(!name){alert('Escribe el nombre del medicamento.');return}
- if(db.medicines.some(x=>x.toLowerCase()===name.toLowerCase())){alert('Ese medicamento ya está en el catálogo.');return}
+ if(!name){toast('Escribe el nombre del medicamento.',true);return}
+ if(db.medicines.some(x=>x.toLowerCase()===name.toLowerCase())){toast('Ese medicamento ya está en el catálogo.',true);return}
  db.medicines.push(name);
  $('newMedicine').value='';
  persist();
 }
-function removeMedicine(i){
+function removeMedicine(name){
  if(!confirm('¿Quitar este medicamento del catálogo? Los tratamientos ya guardados no se eliminan.'))return;
- db.medicines.splice(i,1);persist();
+ db.medicines=db.medicines.filter(x=>x!==name);
+ persist();
 }
 function saveHealth(){
  const medicines=[...document.querySelectorAll('.med-check:checked')].map(x=>x.value);
@@ -574,34 +833,117 @@ function saveHealth(){
   dose:$('sDosis').value,route:$('sVia').value,
   withdrawal:$('sRetiro').value,person:$('sResp').value,obs:$('sObs').value
  };
- if(!o.date||!o.animal||!medicines.length){alert('Indica fecha, animal y selecciona al menos un medicamento.');return}
+ if(!o.date||!o.animal||!medicines.length){toast('Indica fecha, animal y selecciona al menos un medicamento.',true);return}
  db.health.unshift(o);
  ['sMotivo','sDosis','sRetiro','sResp','sObs'].forEach(x=>$(x).value='');
  document.querySelectorAll('.med-check').forEach(x=>x.checked=false);
- persist();alert('Tratamiento sanitario guardado.');
+ persist();toast('Tratamiento sanitario guardado.');
+}
+function editHealth(id){
+ const h=db.health.find(x=>x.id===id);if(!h)return;
+ $('sFecha').value=h.date;$('sAnimal').value=h.animal;$('sMotivo').value=h.reason||'';
+ $('sDosis').value=h.dose||'';$('sVia').value=h.route||'Intramuscular';
+ $('sRetiro').value=h.withdrawal||'';$('sResp').value=h.person||'';$('sObs').value=h.obs||'';
+ document.querySelectorAll('.med-check').forEach(x=>x.checked=(h.medicines||[]).includes(x.value));
+ db.health=db.health.filter(x=>x.id!==id);
+ persist();
+ showTab('sanidad');
+ toast('Tratamiento cargado para editar. Guarda de nuevo al terminar.');
+}
+function deleteHealth(id){
+ if(!confirm('¿Eliminar este tratamiento sanitario?'))return;
+ db.health=db.health.filter(x=>x.id!==id);
+ persist();toast('Tratamiento eliminado.');
 }
 
-/* Animales */
+/* ============ Animales ============ */
 function saveAnimal(){
  const a={
   code:$('aCodigo').value.trim().toUpperCase(),
   name:$('aNombre').value.trim()||$('aCodigo').value.trim(),
-  breed:$('aRaza').value,birth:$('aNac').value,status:$('aEstado').value
+  breed:$('aRaza').value.trim()||'Brown Swiss',
+  birth:$('aNac').value,
+  status:$('aEstado').value,
+  father:$('aPadre').value.trim(),
+  mother:$('aMadre').value.trim(),
+  pregnant:$('aPrenada').checked && $('aSexo').value==='Hembra',
+  sex:$('aSexo').value
  };
- if(!a.code){alert('El código es obligatorio.');return}
+ if(!a.code){toast('El código es obligatorio.',true);return}
+
+ if(a.mother && matchAnimal(a.mother)?.code === a.code){
+   toast('La madre no puede ser el mismo animal.',true);return;
+ }
+ if(a.father && matchAnimal(a.father)?.code === a.code){
+   toast('El padre no puede ser el mismo animal.',true);return;
+ }
+ if(a.mother && wouldCreateCycle(a.code, a.mother)){
+   toast('La madre indicada crea un ciclo genealógico con este animal.',true);return;
+ }
+
  const i=db.animals.findIndex(x=>x.code===a.code);
  if(i>=0)db.animals[i]=a;else db.animals.push(a);
- ['aCodigo','aNombre','aRaza','aNac'].forEach(x=>$(x).value='');
- persist();alert('Animal guardado.');
+ ['aCodigo','aNombre','aNac','aPadre','aMadre'].forEach(x=>$(x).value='');
+ $('aRaza').value='Brown Swiss';
+ $('aEstado').value='En producción';
+ $('aPrenada').checked=false;
+ $('aSexo').value='Hembra';
+ updateSexUI();
+ persist();toast('Animal guardado.');
 }
 function editAnimal(code){
  const a=db.animals.find(x=>x.code===code);if(!a)return;
- $('aCodigo').value=a.code;$('aNombre').value=a.name;
- $('aRaza').value=a.breed;$('aNac').value=a.birth;$('aEstado').value=a.status;
+ $('aCodigo').value=a.code;
+ $('aNombre').value=a.name;
+ $('aRaza').value=a.breed||'Brown Swiss';
+ $('aNac').value=a.birth||'';
+ $('aEstado').value=a.status||'En producción';
+ $('aPadre').value=a.father||'';
+ $('aMadre').value=a.mother||'';
+ $('aPrenada').checked=!!a.pregnant;
+ $('aSexo').value=a.sex||'Hembra';
+ updateSexUI();
  showTab('animales');window.scrollTo(0,0);
 }
+function deleteAnimal(code){
+ if(!confirm('¿Eliminar este animal? Sus registros de leche, reproducción y sanidad se conservan.'))return;
+ db.animals=db.animals.filter(x=>x.code!==code);
+ persist();toast('Animal eliminado.');
+}
 
-/* Historial y presentación */
+/* ============ Render de ficha con genealogía ============ */
+function parentDisplay(texto){
+  if(!texto) return '<span class="muted">—</span>';
+  const m = matchAnimal(texto);
+  if(m) return `<span class="pill ok">✅ ${esc(m.code)} · ${esc(m.name)}</span>`;
+  return `<span class="pill ext">📝 ${esc(texto)} (externo)</span>`;
+}
+
+function renderAnimalCard(a){
+  const badges=[];
+  if(a.pregnant) badges.push('🤰 Preñada');
+
+  const lineageArr = buildMaternalLineage(a);
+  const lineageHTML = lineageArr.length
+    ? `<div class="lrow"><span class="lbl">🧬 Línea materna:</span> <span>${lineageArr.map(esc).join(' → ')}</span></div>`
+    : '';
+
+  return `<div class="animal">
+   <strong>${esc(a.code)} · ${esc(a.name)}</strong><br>
+   <span class="muted">${esc(a.breed||'Raza no indicada')} · ${esc(a.sex||'Hembra')} · ${esc(a.status)}${badges.length?' · '+badges.join(' · '):''}</span>
+   <div class="lineage">
+     <div class="lrow"><span class="lbl">👩 Madre:</span> ${parentDisplay(a.mother)}</div>
+     <div class="lrow"><span class="lbl">👨 Padre:</span> ${parentDisplay(a.father)}</div>
+     ${lineageHTML}
+   </div>
+   <div class="actions">
+     <button class="smallbtn" data-edit-animal="${esc(a.code)}">Editar</button>
+     <button class="danger" data-del-animal="${esc(a.code)}">Eliminar</button>
+   </div>
+   </div>`;
+}
+
+/* ============ Historial y presentación ============ */
 function block(title,sub,actions=''){
  return `<div class="entry"><strong>${esc(title)}</strong><br><span class="muted">${esc(sub)}</span>${actions?`<div class="actions">${actions}</div>`:''}</div>`;
 }
@@ -611,34 +953,43 @@ function render(){
  const todayLiters=db.milk.filter(x=>x.date===today()).reduce((n,x)=>n+reportLiters(x),0);
  $('litrosHoy').textContent=todayLiters.toFixed(2);
 
- $('animalList').innerHTML=db.animals.map(a=>`<div class="animal">
- <strong>${esc(a.code)} · ${esc(a.name)}</strong><br>
- <span class="muted">${esc(a.breed||'Raza no indicada')} · ${esc(a.status)}</span><br>
- <button class="smallbtn" onclick="editAnimal('${esc(a.code)}')">Editar</button>
- </div>`).join('')||'<div class="empty">Aún no hay animales.</div>';
+ const retiros=animalsInWithdrawalNow();
+ if(retiros.length){
+   $('withdrawalAlert').innerHTML=`<div class="status alert"><strong>🚫 Retiro de leche activo:</strong><br>`+
+     retiros.map(r=>`${esc(animalName(r.code))} — hasta ${r.end?r.end.toLocaleDateString('es-PE'):''}`).join('<br>')+
+     `<br><span class="muted">No comercialices la leche de estos animales.</span></div>`;
+ }else{
+   $('withdrawalAlert').innerHTML='';
+ }
+
+ $('animalList').innerHTML=db.animals.map(renderAnimalCard).join('')||'<div class="empty">Aún no hay animales.</div>';
 
  $('milkList').innerHTML=[...db.milk].sort((a,b)=>(b.date+b.shift).localeCompare(a.date+a.shift)).map(x=>{
   const id=esc(x.id);
   return block(`${x.date} · ${shiftName(x.shift)} · ${reportLiters(x).toFixed(2)} L`,
    reportDescription(x)+(x.obs?' · '+x.obs:''),
-   `<button class="smallbtn" onclick="editMilk('${id}')">Editar reporte</button>`);
+   `<button class="smallbtn" data-edit-milk="${id}">Editar reporte</button>`);
  }).join('')||'<div class="empty">Todavía no hay producción registrada.</div>';
 
  $('weeklyList').innerHTML=db.weeklyReports.map(r=>block(
   `${r.start} al ${r.end}`,
   `${Number(r.total).toFixed(2)} L · S/ ${Number(r.price).toFixed(2)}/L · Total S/ ${Number(r.amount).toFixed(2)}`,
-  `<button class="smallbtn" onclick="showWeekly('${esc(r.id)}')">Ver reporte</button>
-   <button class="danger" onclick="deleteWeekly('${esc(r.id)}')">Eliminar</button>`
+  `<button class="smallbtn" data-show-weekly="${esc(r.id)}">Ver reporte</button>
+   <button class="danger" data-del-weekly="${esc(r.id)}">Eliminar</button>`
  )).join('')||'<div class="empty">Todavía no hay reportes semanales guardados.</div>';
 
  $('reproList').innerHTML=db.repro.slice(0,20).map(x=>block(
   `${x.date} · ${animalName(x.animal)}`,
-  `${x.event}${x.time?' · '+x.time:''}. ${x.detail||''} ${x.obs||''}`
+  `${x.event}${x.time?' · '+x.time:''}. ${x.detail||''} ${x.obs||''}`,
+  `<button class="smallbtn" data-edit-repro="${esc(x.id)}">Editar</button>
+   <button class="danger" data-del-repro="${esc(x.id)}">Eliminar</button>`
  )).join('')||'<div class="empty">Todavía no hay eventos reproductivos.</div>';
 
  $('healthList').innerHTML=db.health.slice(0,20).map(x=>block(
   `${x.date} · ${animalName(x.animal)}`,
-  `${x.medicine||x.medicines?.join(', ')} · ${x.dose||'Dosis no indicada'} · ${x.route||''}. Motivo: ${x.reason||'No indicado'}. Retiro leche: ${x.withdrawal||'No indicado'} días.`
+  `${x.medicine||x.medicines?.join(', ')} · ${x.dose||'Dosis no indicada'} · ${x.route||''}. Motivo: ${x.reason||'No indicado'}. Retiro leche: ${x.withdrawal||'No indicado'} días.`,
+  `<button class="smallbtn" data-edit-health="${esc(x.id)}">Editar</button>
+   <button class="danger" data-del-health="${esc(x.id)}">Eliminar</button>`
  )).join('')||'<div class="empty">Todavía no hay tratamientos registrados.</div>';
 
  const all=[
@@ -649,10 +1000,26 @@ function render(){
 
  $('allList').innerHTML=all.slice(0,60).map(x=>block(`${x.d} · ${x.t} · ${x.a}`,x.s)).join('')||'<div class="empty">No hay registros todavía.</div>';
  $('ultimos').innerHTML=all.slice(0,4).map(x=>block(`${x.d} · ${x.t} · ${x.a}`,x.s)).join('')||'<div class="empty">Registra tu primera producción.</div>';
+
  renderMedicines();
+ refreshDatalists();
 }
 
-/* Copia de seguridad, restauración y CSV */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button');
+  if(!t)return;
+  if(t.dataset.editMilk) editMilk(t.dataset.editMilk);
+  else if(t.dataset.showWeekly) showWeekly(t.dataset.showWeekly);
+  else if(t.dataset.delWeekly) deleteWeekly(t.dataset.delWeekly);
+  else if(t.dataset.editRepro) editRepro(t.dataset.editRepro);
+  else if(t.dataset.delRepro) deleteRepro(t.dataset.delRepro);
+  else if(t.dataset.editHealth) editHealth(t.dataset.editHealth);
+  else if(t.dataset.delHealth) deleteHealth(t.dataset.delHealth);
+  else if(t.dataset.editAnimal) editAnimal(t.dataset.editAnimal);
+  else if(t.dataset.delAnimal) deleteAnimal(t.dataset.delAnimal);
+});
+
+/* ============ Copia de seguridad, restauración y CSV ============ */
 function download(blob,name){
  const a=document.createElement('a');
  const url=URL.createObjectURL(blob);
@@ -662,9 +1029,16 @@ function download(blob,name){
 function backup(){
  const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
  download(blob,'mi_establo_respaldo_'+today()+'.json');
+ toast('Copia de seguridad descargada.');
 }
 function exportCSV(){
  const rows=[['Tipo','Fecha','Turno','Animal / detalle','Litros','Observaciones']];
+
+ db.animals.forEach(a=>rows.push([
+   'Animal','','',`${a.code} · ${a.name}`,'',
+   `Sexo: ${a.sex||'Hembra'}. Nacimiento: ${a.birth||'—'}. Raza: ${a.breed||'—'}. Estado: ${a.status||'—'}. Preñada: ${a.pregnant?'Sí':'No'}. Madre: ${a.mother||'—'}. Padre: ${a.father||'—'}.`
+ ]));
+
  db.milk.forEach(x=>rows.push([
   'Leche',x.date,shiftName(x.shift),
   x.type==='total'?'Producción total del establo':reportDescription(x),
@@ -675,32 +1049,44 @@ function exportCSV(){
  db.weeklyReports.forEach(x=>rows.push(['Reporte semanal',x.start+' al '+x.end,'','Total semanal',x.total,`Precio: S/ ${x.price}. Importe: S/ ${x.amount}`]));
  const csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');
  download(new Blob([csv],{type:'text/csv;charset=utf-8'}),'mi_establo_registros_'+today()+'.csv');
+ toast('CSV exportado.');
+}
+
+function isValidDB(x){
+  return x && ['animals','milk','repro','health'].every(k=>Array.isArray(x[k]));
 }
 function restore(){
  const f=$('restoreFile').files[0];
- if(!f){alert('Selecciona primero tu archivo JSON.');return}
+ if(!f){toast('Selecciona primero tu archivo JSON.',true);return}
  const rd=new FileReader();
  rd.onload=()=>{
   try{
    const x=JSON.parse(rd.result);
-   if(!x.animals||!x.milk||!x.repro||!x.health)throw new Error('Formato inválido');
-   if(!confirm('Esto reemplazará los datos actuales de la aplicación. ¿Continuar?'))return;
+   if(!isValidDB(x))throw new Error('Formato inválido');
+   try{
+     const bkp=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+     download(bkp,'mi_establo_antes_de_restaurar_'+today()+'.json');
+   }catch(_){}
+   if(!confirm('Esto reemplazará los datos actuales. Se descargó un respaldo previo. ¿Continuar?'))return;
    db=x;
    db.medicines||=[];db.weeklyReports||=[];
    migrateOldMilk();
+   migrateAnimals();
    persist();
-   alert('Copia restaurada correctamente.');
-  }catch(e){alert('El archivo no parece ser una copia válida de Mi Establo.')}
+   toast('Copia restaurada correctamente.');
+   $('restoreFile').value='';
+  }catch(e){toast('El archivo no parece ser una copia válida de Mi Establo.',true)}
  };
  rd.readAsText(f);
 }
 
-/* Inicio */
+/* ============ Inicio ============ */
 dateInit();
 animalOptions('rAnimal');
 animalOptions('sAnimal');
+updateSexUI();
 render();
-$('weekPrice').value='1.80';
+$('weekPrice').value='2';
 previewWeek();
 dateMilkChanged();
 showTab('leche');
